@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-4 padding">
+            <div class="photo block">
+                аватар
+            </div>
+            <div class="friend block">
+                друзья
+            </div>
+            <div class="friend-online block">
+                друзья онлайн
+            </div>
+        </div>
+        <div class="col-lg-8 padding">
+            <div class="details block">
+                информация обо мне
+            </div>
+            <div class="statistic block">
+                фото
+            </div>
+            <div class="wall block">
+                стена
+            </div>
+        </div>
+    </div>
+{% endblock %}

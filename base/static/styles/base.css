@@ -1,0 +1,26 @@
+
+body {
+    background-color: rgba(252, 218, 241, 0.52);
+}
+
+.border, .border div {
+    border: 1px solid black !important;
+    height: 500px;
+}
+
+@media (min-width: 1200px) {
+    .container{
+        max-width: 850px;
+    }
+}
+
+.padding {
+    padding: 0 6px 0 6px !important;
+}
+
+.block {
+    background-color: white;
+    box-shadow: 0 0 1px black;
+    height: 300px;
+    margin: 12px 0 12px 0;
+}

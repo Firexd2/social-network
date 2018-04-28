@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block container %}
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="login block">
+                <form method="POST" action="">{% csrf_token %}
+                    {{ form.errors }}
+                    {{ form }}
+                    <button>Ok</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="welcome block"></div>
+        </div>
+    </div>
+{% endblock %}
