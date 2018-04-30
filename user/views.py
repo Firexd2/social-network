@@ -1,8 +1,6 @@
-from django.shortcuts import render
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView
 from django.contrib.auth import views as auth
 from .forms import RegisterForm
-from django.core.mail import send_mail
 from .forms import CustomAuthenticationForm
 from .tools import send_verification_email, create_message
 from django.http import HttpResponseRedirect

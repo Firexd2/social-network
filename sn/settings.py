@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,9 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'base',
-    'Auth',
-    'home',
+    'user',
+    'page',
 ]
 
 MIDDLEWARE = [
@@ -115,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'Auth.User'
+AUTH_USER_MODEL = 'user.User'
 
 LOGIN_URL = '/auth/'
 

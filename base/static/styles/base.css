@@ -1,6 +1,15 @@
 
 body {
-    background-color: rgba(252, 218, 241, 0.52);
+    background-color: rgba(252, 218, 241, 0.07);
+}
+
+input, button, .input-group-addon, .alert {
+    border-radius: 0 !important;
+}
+
+.row {
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .border, .border div {
@@ -18,9 +27,55 @@ body {
     padding: 0 6px 0 6px !important;
 }
 
+.welcome, .register {
+    padding: 20px 50px 20px 50px !important;
+}
+
 .block {
     background-color: white;
     box-shadow: 0 0 1px black;
-    height: 300px;
     margin: 12px 0 12px 0;
+    padding: 20px 20px 20px 20px;
 }
+
+.login {
+    padding: 20px 20px 20px 20px;
+    box-shadow: none;
+}
+
+form[name=auth] div, form[name=auth] button {
+    margin-bottom: 10px;
+}
+
+form[name=auth] button {
+    width: 100%;
+}
+
+.alert {
+    font-size: 13px;
+    padding: 10px 5px 0 0;
+}
+
+.short-info {
+    font-size: 14px;
+    color: rgb(162, 162, 162);
+}
+
+.short-info p {
+    margin-bottom: 5px;
+}
+
+.short-info p span {
+    color: deepskyblue;
+}
+
+/*#footer {*/
+    /*display: flex;*/
+/*}*/
+
+/*#footer a {*/
+    /*flex-basis: auto;*/
+    /*flex-grow: 1;*/
+/*}*/
+
+

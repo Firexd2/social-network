@@ -5,9 +5,6 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def _create_user(self, email, password, **extra_fields):
-        """
-        Создает и сохраняет пользователя с введенным им email и паролем.
-        """
         if not email:
             raise ValueError('email должен быть указан')
         email = self.normalize_email(email)

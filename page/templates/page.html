@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-lg-4 padding">
             <div class="photo block">
-                аватар
+                {{ object.first_name }}
             </div>
             <div class="friend block">
                 друзья
@@ -18,7 +18,18 @@
         </div>
         <div class="col-lg-8 padding">
             <div class="details block">
-                информация обо мне
+                <div>
+                    <h5 style="float: left">{{ object.first_name }} {{ object.last_name }}</h5>
+                    <span style="float: right">online</span>
+                    <div style="clear: left"></div>
+                    <hr>
+                    <div class="short-info">
+                        <p>Место проживания: <span>Москва</span></p>
+                        <p>Дата рождения: <span>05.55.1999</span></p>
+                        <p>Семейное положение: <span>Женат</span></p>
+                        <p>Тип занятости: <span>Работаю</span></p>
+                    </div>
+                </div>
             </div>
             <div class="statistic block">
                 фото
