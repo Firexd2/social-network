@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'photo/style.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 padding">
+            <div class="block">
+                <h6 style="float: left; margin-bottom: 3px">
+                    Альбомы пользователя
+                    <b>{{ current_user.first_name }}</b>
+                    <span style="color: #bcbcbc; padding-left: 5px">{{ object_list.count }}</span></h6>
+                <a href="" style="float: right" data-toggle="modal" data-target=".bd-example-modal-md">Создать альбом</a>
+                <div style="clear: left"></div>
+                <hr>
+                <div class="albums">
+                    {% for album in object_list %}
+                        <span onclick="location.href='{{ album.get_absolute_url }}'">
+                            <img style="width: 200px" src="{{ album.cover }}" alt="">
+                            <p>{{ album.name }}</p>
+                        </span>
+                    {% endfor %}
+                </div>
+                <h6>Все фотографии</h6>
+                <hr>
+                <div class="photos">
+                    {% for album in object_list %}
+                        {% for photo in album.photos.all %}
+                            <span class="photo">
+                            <img style="width: 200px" onclick="location.href='/media/{{ photo.photo }}'" src="/media/{{ photo.photo }}" alt="">
+                        </span>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-md" id="modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div style="padding: 20px 30px 20px 30px" class="new-album">
+                    <h5>Новый альбом</h5>
+                    <hr>
+                    <form method="POST"> {% csrf_token %}
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1"><i class="fas fa-camera-retro"></i></span>
+                            {{ form.name|attr:'placeholder:Название альбома'|attr:'class:form-control' }}
+                        </div>
+                        <div>
+                            {{ form.description|attr:'class:form-control'|attr:'placeholder:Описание' }}
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-success">Готово</button>
+                            <button type="button" onclick="$('#modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

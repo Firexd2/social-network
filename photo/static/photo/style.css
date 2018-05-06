@@ -1,0 +1,39 @@
+.albums span, .photos span {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin: 0 22px 44px 22px;
+    width: 200px;
+}
+
+.albums span p, .photos span p {
+    margin: 0;
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+    font-size: 14px;
+}
+
+form div {
+    margin-bottom: 15px;
+}
+
+.photos span p  {
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.photo:hover p {
+    opacity: 1;
+    transition: 0.3s;
+}
+
+.photo p:hover {
+    color: #4646ff
+}
+
+.photo {
+    cursor: pointer;
+}

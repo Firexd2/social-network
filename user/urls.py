@@ -7,5 +7,5 @@ urlpatterns = [
     path('', views.LoginFormView.as_view()),
     path('registration/', views.RegisterFormView.as_view()),
     path('logout/', auth_views.logout_then_login),
-    path(r'activate/<uidb64>/<token>/', activate, name='activate'),
+    path(r'activate/<str:uidb64>/<str:token>/', activate, name='activate'),
 ]

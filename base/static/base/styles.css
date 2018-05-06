@@ -17,11 +17,11 @@ input, button, .input-group-addon, .alert {
     height: 500px;
 }
 
-@media (min-width: 1200px) {
+/*@media (min-width: 1200px) {*/
     .container{
-        max-width: 850px;
+        max-width: 1000px;
     }
-}
+/*}*/
 
 .padding {
     padding: 0 6px 0 6px !important;
@@ -61,12 +61,28 @@ form[name=auth] button {
     color: rgb(162, 162, 162);
 }
 
-.short-info p {
-    margin-bottom: 5px;
+.short-info td, .short-info th {
+    border-top: none;
+    text-align: left;
 }
 
-.short-info p span {
+.short-info th {
     color: deepskyblue;
+}
+
+.status {
+    font-size: 13px;
+    color: #939393;
+}
+
+.left-menu {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.left-menu a:hover {
+    border-radius: 0;
+    background: #f1f1f1;
 }
 
 /*#footer {*/

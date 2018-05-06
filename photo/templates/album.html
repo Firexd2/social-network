@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'photo/style.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 padding">
+            <div class="block">
+                <h6 style="float: left; margin-bottom: 3px">
+                    Альбом <b>{{ object.name }}</b> (<b>{{ current_user.get_full_name }}</b>)
+                    <span style="color: #bcbcbc; padding-left: 5px">{{ object.photos.count }}</span>
+                </h6>
+                <span style="float: right">
+                    <a href="" data-toggle="modal" data-target=".bd-example-modal-md">Добавить фотографии</a> |
+                    <a href=""  data-toggle="modal" data-target=".bd-example-modal-md-edit">Редактировать</a> |
+                    <a id="back" href="{{ object.get_previous_url }}">Назад</a>
+                 </span>
+                <div style="clear: left"></div>
+                <hr>
+                {% if object.description %}
+                    {{ object.description }}
+                    <hr>
+                {% endif %}
+                <div class="photos">
+                    {% for photo in object.photos.all %}
+                        <span class="photo">
+                            <img style="width: 200px" onclick="location.href='/media/{{ photo.photo }}'" src="/media/{{ photo.photo }}" alt="">
+                            <p id="{{ object.id }}" cover="/media/{{ photo.photo }}">Сделать обложкой</p>
+                        </span>
+                    {% endfor %}
+                </div>
+                <button type="button" onclick="$.post('/edit_cover_album/delete/', {id: {{object.id}} });location.href=$('#back').attr('href')" class="btn btn-outline-danger">Удалить альбом</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-md" tabindex="-1" id="modal" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div style="padding: 20px 30px 20px 30px" class="new-photo">
+                    Добавить новую фотографию
+                    <hr>
+                    <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1"><i class="fas fa-file"></i></span>
+                            {{ form.photo|attr:'class:form-control' }}
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-success">Готово</button>
+                            <button type="button" onclick="$('#modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-md-edit" tabindex="-1" id="edit-modal" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div style="padding: 20px 30px 20px 30px" class="new-photo">
+                    Редактирование альбома
+                    <hr>
+                    <form method="POST" name="edit-album" action="/edit_cover_album/description/" enctype="multipart/form-data"> {% csrf_token %}
+                        <input type="text" hidden name="id" value="{{ object.id }}">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1"><i class="fas fa-camera-retro"></i></span>
+                            <input type="text" name="name" class="form-control" value="{{ object.name }}">
+                        </div>
+                        <div class="input-group">
+                            <textarea name="description" class="form-control">{{ object.description }}</textarea>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-success">Готово</button>
+                            <button type="button" onclick="$('#edit-modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'photo/scripts.js' %}"></script>
+{% endblock %}

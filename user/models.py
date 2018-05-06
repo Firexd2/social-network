@@ -1,22 +1,25 @@
 from __future__ import unicode_literals
+from datetime import datetime
 from django.db import models
 # from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.utils.translation import ugettext_lazy as _
+from django.urls import reverse
+from photo.models import PhotoAlbum
 from .manager import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(_('email'), unique=True)
-    url = models.CharField(_('url'), max_length=200, unique=True, blank=True, null=True)
-    first_name = models.CharField(_('name'), max_length=30)
-    last_name = models.CharField(_('surname'), max_length=30)
-    date_joined = models.DateTimeField(_('registered'), auto_now_add=True)
-    is_active = models.BooleanField(_('is_active'), default=True)
+    email = models.EmailField(unique=True)
+    url = models.CharField(max_length=200, unique=True, blank=True, null=True)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    date_joined = models.DateTimeField(auto_now_add=True)
+    last_activity = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    id_page = models.SlugField('id_page', max_length=100, blank=True)
-    url_page = models.SlugField('url_page', max_length=100, unique=True, null=True, blank=True)
+    id_page = models.SlugField(max_length=100, blank=True)
+    url_page = models.SlugField(max_length=100, unique=True, null=True, blank=True)
     settings = models.OneToOneField('SettingsUser', on_delete=models.CASCADE, blank=True, null=True)
 
     objects = UserManager()
@@ -25,15 +28,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+
+    @property
+    def get_id(self):
+        id = self.url_page if self.url_page else self.id_page
+        return id
+
+    def get_albums_page_url(self):
+        return reverse('albums', kwargs={'id': self.get_id})
 
     def get_absolute_url(self):
-        from django.urls import reverse
-        if self.url_page:
-            return reverse('page', kwargs={'id': self.url_page})
-        else:
-            return reverse('page', kwargs={'id': self.id_page})
+        return reverse('page', kwargs={'id': self.get_id})
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
@@ -42,8 +49,29 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.first_name
 
+
+
     # def email_user(self, subject, message, from_email=None, **kwargs):
     #     send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    @staticmethod
+    def get_string_last_activity(last, now):
+        if last.date() == now.date():
+            return 'Заходил сегодня в %s:%s' % (last.hour, last.minute)
+        elif (now.date() - last.date()).days == 1:
+            return 'Заходил вчера в %s:%s' % (last.hour, last.minute)
+        else:
+            return 'Заходил %s в %s:%s' % (last.date, last.hours, last.minute)
+
+    def get_last_online(self):
+
+        now = datetime.now().replace(tzinfo=None)
+        last = self.last_activity
+        difference = (now - last).seconds
+        if difference > 600:
+            return self.get_string_last_activity(last, now)
+        else:
+            return 'online'
 
     def save(self, *args, **kwargs):
 
@@ -58,9 +86,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.save()
 
 
+
+
 class SettingsUser(models.Model):
 
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     date_of_birth = models.CharField(max_length=10, null=True, blank=True)
     city = models.CharField(max_length=30, null=True, blank=True)
     employment = models.CharField(max_length=30, null=True, blank=True)
+
+    photo_albums = models.ManyToManyField(PhotoAlbum, blank=True, related_name='set_user')

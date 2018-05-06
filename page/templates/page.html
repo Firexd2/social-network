@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{#{% load poll_extras %}#}
 {% block static %}
-    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+    <link rel="stylesheet" href="{% static 'page/styles.css' %}">
 {% endblock %}
 {% block content %}
     <div class="row">
         <div class="col-lg-4 padding">
             <div class="photo block">
-                {{ object.first_name }}
+                13
             </div>
             <div class="friend block">
                 друзья
@@ -19,16 +20,34 @@
         <div class="col-lg-8 padding">
             <div class="details block">
                 <div>
-                    <h5 style="float: left">{{ object.first_name }} {{ object.last_name }}</h5>
-                    <span style="float: right">online</span>
+                    <h5 style="float: left; margin-bottom: 3px">{{ object.get_full_name }}</h5>
+                    <span style="float: right">{{ object.get_last_online }}</span>
                     <div style="clear: left"></div>
+                    <div class="status">Создаю социальную сеть</div>
                     <hr>
-                    <div class="short-info">
-                        <p>Место проживания: <span>Москва</span></p>
-                        <p>Дата рождения: <span>05.55.1999</span></p>
-                        <p>Семейное положение: <span>Женат</span></p>
-                        <p>Тип занятости: <span>Работаю</span></p>
-                    </div>
+                </div>
+
+                <div class="short-info">
+                    <table class="table table-sm">
+                        <tbody>
+                        <tr>
+                            <td>Место проживания:</td>
+                            <th>Москва</th>
+                        </tr>
+                        <tr>
+                            <td>Семейное положение:</td>
+                            <th>Женат</th>
+                        </tr>
+                        <tr>
+                            <td>Дата рождения:</td>
+                            <th>06.11.1990</th>
+                        </tr>
+                        <tr>
+                            <td>Тип занятости</td>
+                            <th>Студент</th>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="statistic block">

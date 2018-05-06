@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'base/styles.css' %}">
     {% block static %}
     {% endblock %}
     <title>Социальная сеть</title>
@@ -42,7 +42,7 @@
 <div class="container">
     {% block container %}
         <div class="row">
-            <div class="col-lg-2 padding">
+            <div class="col-lg-2 left-menu">
                 {% include 'left-menu.html' %}
             </div>
             <div class="col-lg-10 padding">
@@ -60,9 +60,11 @@
 </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="//code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="//code.jquery.com/jquery-3.1.0.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="{% static 'scripts/scripts.js' %}"></script>
+<script src="{% static 'base/scripts.js' %}"></script>
+{% block scripts %}
+{% endblock %}
 </body>
 </html>
