@@ -2,7 +2,7 @@
 {% load widget_tweaks %}
 {% block container %}
     <div class="row">
-        <div class="col-lg-8 offset-md-2">
+        <div class="col-lg-6 offset-md-3">
             <div class="register block">
                 <form name="auth" method="POST" action="">{% csrf_token %}
                     {% if form.non_field_errors %}

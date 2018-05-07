@@ -1,0 +1,42 @@
+.min-block {
+    padding: 5px 20px 5px 20px
+}
+
+.header-block {
+    margin-bottom: 20px;
+}
+
+.header-block h6 {
+    float: left;
+    margin: 0;
+    line-height: 1.5
+}
+
+.header-block a {
+    float: right;
+    font-size: 13px;
+}
+
+.photos {
+    margin-bottom: 20px;
+}
+
+.photo {
+    padding: 0 8px 0 8px;
+}
+
+.photo img {
+    cursor: pointer;
+}
+
+.avatar {
+    text-align: center;
+}
+
+.avatar img {
+    display: inline-block;
+}
+
+.avatar .image {
+    margin-bottom: 20px;
+}

@@ -7,8 +7,21 @@
 {% block content %}
     <div class="row">
         <div class="col-lg-4 padding">
-            <div class="photo block">
-                13
+            <div class="avatar block">
+                <div class="image">
+                    {% if object.settings.avatar %}
+                        <img style="width: 200px;cursor: pointer" onclick="location.href='/media/{{ object.settings.avatar }}'" src="/media/{{ object.settings.avatar }}" alt="">
+                    {% else %}
+                        <img style="width: 200px" src="/media/no-image.gif" alt="">
+                    {% endif %}
+                </div>
+                <div class="buttons">
+                    {% if user.id == object.id %}
+                        <button data-toggle="modal" data-target=".bd-example-modal-md" class="btn btn-outline-success">Новое фото</button>
+                    {% else %}
+                        321
+                    {% endif %}
+                </div>
             </div>
             <div class="friend block">
                 друзья
@@ -26,7 +39,6 @@
                     <div class="status">Создаю социальную сеть</div>
                     <hr>
                 </div>
-
                 <div class="short-info">
                     <table class="table table-sm">
                         <tbody>
@@ -50,11 +62,40 @@
                     </table>
                 </div>
             </div>
-            <div class="statistic block">
-                фото
+            <div class="photos min-block">
+                <div class="header-block">
+                    <h6>Фотографии пользователя</h6>
+                    <a href="{{ object.get_albums_page_url }}">Показать все</a>
+                    <div style="clear: left"></div>
+                </div>
+                <div class="photos">
+                    {% for photo in last_photos %}
+                        <span class="photo">
+                            <img style="width: 100px" onclick="location.href='/media/{{ photo.photo }}'" src="/media/{{ photo.photo }}" alt="">
+                        </span>
+                    {% endfor %}
+                </div>
             </div>
             <div class="wall block">
                 стена
+            </div>
+        </div>
+    </div>
+        <div class="modal fade bd-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                Загрузить новую аватарку
+                <hr>
+                <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1"><i class="fas fa-file"></i></span>
+                        <input type="file" name="photo" class="form-control">
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-success">Готово</button>
+                        <button type="button" onclick="$('.modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

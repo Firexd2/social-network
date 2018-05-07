@@ -4,9 +4,8 @@ from django.views.generic import ListView, DetailView
 from base.views import GetUserMixin
 from photo.models import PhotoAlbum, Photo
 from django.views.generic.edit import FormMixin
-from .forms import NewAlbumForm, NewPhotoForm
+from .forms import NewPhotoForm, NewAlbumForm
 from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_exempt
 
 
 class ListAlbumView(GetUserMixin, FormMixin, ListView):
@@ -36,34 +35,29 @@ class ListAlbumView(GetUserMixin, FormMixin, ListView):
 class DetailAlbumView(GetUserMixin, FormMixin, DetailView):
     model = PhotoAlbum
     template_name = 'album.html'
-    form_class = NewPhotoForm
+
+    def get_form(self, form_class=None):
+        pass
 
     def post(self, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            photo = form.save(commit=False)
+        album = self.get_object()
+        if self.request.POST.get('cover'):
+            album.cover = self.request.POST['cover']
+            album.save()
+        elif self.request.POST.get('description'):
+            album.name = self.request.POST['name']
+            album.description = self.request.POST['description']
+            album.save()
+        elif self.request.FILES.get('photo'):
+            photo = Photo(photo=self.request.FILES['photo'])
             photo.save()
-            album = self.get_object()
             album.photos.add(photo)
+        elif self.request.POST.get('delete'):
+            album.delete()
+
         return redirect(self.request.get_full_path())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['current_user'] = self.get_user
         return context
-
-
-@csrf_exempt
-def edit_album(request, action):
-    if request.POST:
-        album = PhotoAlbum.objects.get(id=request.POST['id'])
-        if action == 'cover':
-            album.cover = request.POST['cover']
-        elif action == 'description':
-            album.name = request.POST['name']
-            album.description = request.POST['description']
-
-        if action == 'delete': album.delete()
-        else: album.save()
-
-        return HttpResponse('200')

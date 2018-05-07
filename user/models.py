@@ -7,6 +7,7 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.urls import reverse
 from photo.models import PhotoAlbum
 from .manager import UserManager
+from photo.models import directory_path_photo
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -86,13 +87,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.save()
 
 
-
-
 class SettingsUser(models.Model):
 
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.CharField(max_length=200, null=True, blank=True)
     date_of_birth = models.CharField(max_length=10, null=True, blank=True)
     city = models.CharField(max_length=30, null=True, blank=True)
     employment = models.CharField(max_length=30, null=True, blank=True)
-
     photo_albums = models.ManyToManyField(PhotoAlbum, blank=True, related_name='set_user')

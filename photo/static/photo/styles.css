@@ -16,10 +16,6 @@
     font-size: 14px;
 }
 
-form div {
-    margin-bottom: 15px;
-}
-
 .photos span p  {
     opacity: 0;
     transition: 0.3s;

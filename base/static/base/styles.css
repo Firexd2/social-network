@@ -7,9 +7,18 @@ input, button, .input-group-addon, .alert {
     border-radius: 0 !important;
 }
 
+.btn, .input-group input, .input-group span, input {
+    font-size: 13px !important;
+    padding: 5px 8px 5px 8px !important;
+}
+
 .row {
     margin-left: 0;
     margin-right: 0;
+}
+
+form div {
+    margin-bottom: 15px;
 }
 
 .border, .border div {
@@ -31,7 +40,7 @@ input, button, .input-group-addon, .alert {
     padding: 20px 50px 20px 50px !important;
 }
 
-.block {
+.block, .min-block {
     background-color: white;
     box-shadow: 0 0 1px black;
     margin: 12px 0 12px 0;
@@ -83,6 +92,34 @@ form[name=auth] button {
 .left-menu a:hover {
     border-radius: 0;
     background: #f1f1f1;
+}
+
+.modal-content {
+    padding: 20px 30px 20px 30px
+}
+
+#search-results {
+    display: none;
+    background: white;
+    position: absolute;
+    margin-top: 5px;
+    width: 216px;
+    box-shadow: 0 0 1px #9c9c9c;
+    font-size: 13px;
+    padding: 5px 10px 0 10px;
+    z-index: 999;
+}
+
+#search-results hr {
+    margin: 4px 0 4px 0;
+}
+
+#search-results table {
+    margin-top: 10px;
+}
+
+#search-results table tr {
+    cursor: pointer;
 }
 
 /*#footer {*/

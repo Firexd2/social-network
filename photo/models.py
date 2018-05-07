@@ -26,6 +26,7 @@ class PhotoAlbum(models.Model):
 
 class Photo(models.Model):
     photo = models.ImageField(upload_to=directory_path_photo)
+    datetime = models.DateTimeField(auto_now_add=True)
     # name = models.CharField(max_length=100, null=True, blank=True)
     # description = models.TextField(blank=True, null=True)
 
