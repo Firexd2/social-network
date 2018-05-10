@@ -8,7 +8,7 @@ def directory_path_photo(instance, filename):
 
 
 class PhotoAlbum(models.Model):
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=20)
     description = models.TextField(blank=True, null=True)
     cover = models.CharField(max_length=200, default=settings.NO_IMAGE)
     photos = models.ManyToManyField('Photo', related_name='album', blank=True)

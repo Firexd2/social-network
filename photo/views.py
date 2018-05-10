@@ -27,8 +27,7 @@ class ListAlbumView(GetUserMixin, FormMixin, ListView):
         return PhotoAlbum.objects.filter(set_user__user=self.get_user)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['current_user'] = self.get_user
+        context = super(ListAlbumView, self).get_context_data(**kwargs)
         return context
 
 
@@ -36,28 +35,30 @@ class DetailAlbumView(GetUserMixin, FormMixin, DetailView):
     model = PhotoAlbum
     template_name = 'album.html'
 
+    def args_for_action(self):
+        album = self.get_object()
+        return album,
+
     def get_form(self, form_class=None):
         pass
 
-    def post(self, *args, **kwargs):
-        album = self.get_object()
-        if self.request.POST.get('cover'):
-            album.cover = self.request.POST['cover']
-            album.save()
-        elif self.request.POST.get('description'):
-            album.name = self.request.POST['name']
-            album.description = self.request.POST['description']
-            album.save()
-        elif self.request.FILES.get('photo'):
-            photo = Photo(photo=self.request.FILES['photo'])
-            photo.save()
-            album.photos.add(photo)
-        elif self.request.POST.get('delete'):
-            album.delete()
-
+    def action_cover(self, album):
+        album.cover = self.request.POST['cover']
+        album.save()
         return redirect(self.request.get_full_path())
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['current_user'] = self.get_user
-        return context
+    def action_description(self, album):
+        album.name = self.request.POST['name']
+        album.description = self.request.POST['description']
+        album.save()
+        return redirect(self.request.get_full_path())
+
+    def action_photo(self, album):
+        photo = Photo(photo=self.request.FILES['photo'])
+        photo.save()
+        album.photos.add(photo)
+        return redirect(self.request.get_full_path())
+
+    def action_delete(self, album):
+        album.delete()
+        return redirect(self.request.get_full_path())

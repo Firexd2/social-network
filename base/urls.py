@@ -21,6 +21,7 @@ from page import views
 from base.views import general_search
 from sn import settings
 from photo import views as photo_views
+from friends import views as friends_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,7 +31,9 @@ urlpatterns = [
     path('', views.RedirectToMyPageView.as_view()),
     path('<str:id>/', views.PageView.as_view(), name='page'),
     path('<str:id>/albums/', photo_views.ListAlbumView.as_view(), name='albums'),
-    path('<str:id>/album/<str:pk>/', photo_views.DetailAlbumView.as_view(), name='album')
+    path('<str:id>/album/<str:pk>/', photo_views.DetailAlbumView.as_view(), name='album'),
+    path('<str:id>/friends/', friends_views.FriendsListView.as_view(), name='friends'),
+    path('<str:id>/friend_requests/', friends_views.FriendRequestsView.as_view(), name='friend_requests'),
 
 ] + static(settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

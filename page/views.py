@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.views.generic import TemplateView, DetailView, RedirectView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormMixin, TemplateResponseMixin
@@ -20,35 +20,48 @@ class RedirectToMyPageView(LoginRequiredMixin, RedirectView):
 
 
 class PageView(GetUserMixin, View):
-    model = User
     template_name = 'page.html'
 
     def get(self, *args, **kwargs):
         return render(self.request, self.template_name, self.get_context_data())
 
-    def post(self, *args, **kwargs):
+    def args_for_action(self):
         user = self.get_user
+        return user,
 
-        if self.request.FILES.get('photo'):
-            user_settings = user.settings
+    def action_avatar(self, user):
+        user_settings = user.settings
 
-            album, create = PhotoAlbum.objects.filter(set_user__user=user).get_or_create(name='Аватары')
-            if create:
-                user_settings.photo_albums.add(album)
+        album, create = PhotoAlbum.objects.filter(set_user__user=user).get_or_create(name='Фото со страницы')
+        if create:
+            user_settings.photo_albums.add(album)
 
-            photo = Photo(photo=self.request.FILES['photo'])
-            photo.save()
+        photo = Photo(photo=self.request.FILES['avatar'])
+        photo.save()
 
-            album.photos.add(photo)
+        album.photos.add(photo)
 
-            user_settings.avatar = photo.photo
-            user_settings.save()
+        user_settings.avatar = photo.photo
+        user_settings.save()
 
         return redirect(self.request.get_full_path())
 
-    def get_context_data(self):
-        context = dict()
-        context['object'] = self.get_user
+    def action_new_friend(self, user):
+
+        my_user = self.request.user
+        other_user = User.objects.get(id=self.request.POST['new-friend'])
+
+        my_user.settings.subscribers.add(other_user)
+
+        if other_user.settings.subscribers.filter(id=my_user.id):
+            print('YESSSSS')
+            my_user.settings.friends.add(other_user)
+            other_user.settings.friends.add(my_user)
+
+        return HttpResponse('200')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
         context['last_photos'] = self.get_last_photos
         return context
 

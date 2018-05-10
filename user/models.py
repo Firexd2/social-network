@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 from datetime import datetime
 from django.db import models
-# from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.urls import reverse
@@ -40,6 +39,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_albums_page_url(self):
         return reverse('albums', kwargs={'id': self.get_id})
 
+    def get_friends_page_url(self):
+        return reverse('friends', kwargs={'id': self.get_id})
+
+    def get_friend_requests_page_url(self):
+        return reverse('friend_requests', kwargs={'id': self.get_id})
+
     def get_absolute_url(self):
         return reverse('page', kwargs={'id': self.get_id})
 
@@ -50,11 +55,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.first_name
 
-
-
-    # def email_user(self, subject, message, from_email=None, **kwargs):
-    #     send_mail(subject, message, from_email, [self.email], **kwargs)
-
     @staticmethod
     def get_string_last_activity(last, now):
         if last.date() == now.date():
@@ -62,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         elif (now.date() - last.date()).days == 1:
             return 'Заходил вчера в %s:%s' % (last.hour, last.minute)
         else:
-            return 'Заходил %s в %s:%s' % (last.date, last.hours, last.minute)
+            return 'Заходил %s в %s:%s' % (last.date, last.hour, last.minute)
 
     def get_last_online(self):
 
@@ -82,6 +82,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.settings = settings
 
         super(User, self).save(*args, **kwargs)
+
         if not self.id_page:
             self.id_page = 'id' + str(self.id)
             self.save()
@@ -89,7 +90,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class SettingsUser(models.Model):
 
-    avatar = models.CharField(max_length=200, null=True, blank=True)
+    subscribers = models.ManyToManyField('user.User', related_name='subscribes')
+    friends = models.ManyToManyField('user.User', related_name='friends')
+    avatar = models.CharField(max_length=200, default='no-image.gif/', null=True, blank=True)
     date_of_birth = models.CharField(max_length=10, null=True, blank=True)
     city = models.CharField(max_length=30, null=True, blank=True)
     employment = models.CharField(max_length=30, null=True, blank=True)
