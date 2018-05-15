@@ -22,10 +22,10 @@ $(document).ready(function () {
 
                     for (let i = 0; i < dataKeys.length; i++) {
                         result_html += '<tr onclick="location.href=\'' + $data[dataKeys[i]].url + '\'">\n' +
-                            '   <td width="40">\n' +
-                            '     <img width="40" height="40" class="img-circle" src="/media/' + $data[dataKeys[i]].avatar + '" alt="">\n' +
-                            '   </td>\n' +
-                            '   <td>' + dataKeys[i] + '</td>\n' +
+                            '<td width="40">\n' +
+                            '<img width="40" height="40" src="' + $data[dataKeys[i]].avatar + '" alt="">\n' +
+                            '</td>\n' +
+                            '<td>' + dataKeys[i] + '</td>\n' +
                             '</tr>'
                     }
                     if (result_html) {

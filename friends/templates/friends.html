@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load imagekit %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'friends/styles.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-9 padding">
+            <div class="block">
+                <div class="header">
+                    <h6>{{ title }}</h6>
+                </div>
+                <hr>
+                <ul id="menu-list" class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.GET.section == 'all' or not request.GET.section %}active{% endif %}" href="?section=all">Весь список</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.GET.section == 'online' %}active{% endif %}" href="?section=online">В сети</a>
+                    </li>
+                </ul>
+                {% if list %}
+                    <div class="friend-list">
+                        <table class="table">
+                            <tbody>
+                            {% for friend in list %}
+                                <tr onclick="location.href='{{ friend.get_absolute_url }}'">
+                                    <td width="100">
+                                        {% thumbnail '100x100' friend.settings.avatar %}
+                                    </td>
+                                    <td>
+                                        <p style="margin-bottom: 0;color: blue">{{ friend.get_full_name }}</p>
+                                        <p style="font-size: 14px; color: #9c9c9c">{{ friend.get_last_online }}</p>
+                                        <div>{% block buttons %}{% endblock %}</div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div style="margin: 20px 20px 20px 20px">Список пуст</div>
+                    <hr>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-3 padding">
+            <div class="block">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ user.get_friends_page_url }}">Все друзья</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ user.get_subscribers_page_url }}">Подписчики</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ user.get_subscriptions_page_url }}">Подписки</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'friends/scripts.js' %}"></script>
+{% endblock %}

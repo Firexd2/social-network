@@ -1,14 +1,15 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, HttpResponse
 from django.views.generic import ListView, DetailView
-from base.views import GetUserMixin
+from base.views import BaseView
 from photo.models import PhotoAlbum, Photo
 from django.views.generic.edit import FormMixin
+from django.views.generic.detail import BaseDetailView
 from .forms import NewPhotoForm, NewAlbumForm
 from django.http import HttpResponseRedirect
 
 
-class ListAlbumView(GetUserMixin, FormMixin, ListView):
+class ListAlbumView(BaseView, FormMixin, ListView):
     model = PhotoAlbum
     template_name = 'albums.html'
     form_class = NewAlbumForm
@@ -31,7 +32,7 @@ class ListAlbumView(GetUserMixin, FormMixin, ListView):
         return context
 
 
-class DetailAlbumView(GetUserMixin, FormMixin, DetailView):
+class DetailAlbumView(BaseView, FormMixin, DetailView):
     model = PhotoAlbum
     template_name = 'album.html'
 

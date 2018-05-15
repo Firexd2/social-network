@@ -4,6 +4,7 @@ from .forms import RegisterForm
 from .forms import CustomAuthenticationForm
 from .tools import send_verification_email, create_message
 from django.http import HttpResponseRedirect
+from base.views import BaseView
 
 
 class LoginFormView(auth.LoginView):
@@ -27,3 +28,6 @@ class RegisterFormView(FormView):
 
         return HttpResponseRedirect('/')
 
+
+class SettingsPageView(BaseView):
+    pass

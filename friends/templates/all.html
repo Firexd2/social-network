@@ -1,0 +1,8 @@
+{% extends 'friends.html' %}
+{% block buttons %}
+        <form method="POST">{% csrf_token %}
+        <input hidden type="text" name="delete-friend">
+        <input name="id" value="{{ friend.id }}" type="text" hidden>
+        <button class="btn btn-outline-danger" type="submit">Удалить из друзей</button>
+    </form>
+{% endblock %}

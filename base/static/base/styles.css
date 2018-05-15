@@ -1,10 +1,17 @@
-
 body {
     background-color: rgba(252, 218, 241, 0.07);
 }
 
 input, button, .input-group-addon, .alert {
     border-radius: 0 !important;
+}
+
+.navbar {
+    padding: 0;
+}
+
+.navbar .form-inline {
+    margin-top: 4px;
 }
 
 .btn, .input-group input, .input-group span, input {
@@ -120,6 +127,11 @@ form[name=auth] button {
 
 #search-results table tr {
     cursor: pointer;
+}
+
+.nav-tabs .nav-link {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 /*#footer {*/

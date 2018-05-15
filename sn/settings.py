@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'user',
     'page',
     'photo',
-    'friends'
+    'friends',
+    'imagekit',
 ]
 
 MIDDLEWARE = [

@@ -4,9 +4,8 @@ from django.db import models
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.urls import reverse
-from photo.models import PhotoAlbum
 from .manager import UserManager
-from photo.models import directory_path_photo
+from page.models import SettingsUser
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -20,7 +19,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     id_page = models.SlugField(max_length=100, blank=True)
     url_page = models.SlugField(max_length=100, unique=True, null=True, blank=True)
-    settings = models.OneToOneField('SettingsUser', on_delete=models.CASCADE, blank=True, null=True)
+    settings = models.OneToOneField('page.SettingsUser', on_delete=models.CASCADE, blank=True, null=True)
 
     objects = UserManager()
 
@@ -42,8 +41,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_friends_page_url(self):
         return reverse('friends', kwargs={'id': self.get_id})
 
-    def get_friend_requests_page_url(self):
-        return reverse('friend_requests', kwargs={'id': self.get_id})
+    def get_subscribers_page_url(self):
+        return reverse('subscribers', kwargs={'id': self.get_id})
+
+    def get_subscriptions_page_url(self):
+        return reverse('subscriptions', kwargs={'id': self.get_id})
 
     def get_absolute_url(self):
         return reverse('page', kwargs={'id': self.get_id})
@@ -62,8 +64,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         elif (now.date() - last.date()).days == 1:
             return 'Заходил вчера в %s:%s' % (last.hour, last.minute)
         else:
-            return 'Заходил %s в %s:%s' % (last.date, last.hour, last.minute)
+            return 'Заходил %s в %s:%s' % (last.date(), last.hour, last.minute)
 
+    @property
     def get_last_online(self):
 
         now = datetime.now().replace(tzinfo=None)
@@ -86,14 +89,3 @@ class User(AbstractBaseUser, PermissionsMixin):
         if not self.id_page:
             self.id_page = 'id' + str(self.id)
             self.save()
-
-
-class SettingsUser(models.Model):
-
-    subscribers = models.ManyToManyField('user.User', related_name='subscribes')
-    friends = models.ManyToManyField('user.User', related_name='friends')
-    avatar = models.CharField(max_length=200, default='no-image.gif/', null=True, blank=True)
-    date_of_birth = models.CharField(max_length=10, null=True, blank=True)
-    city = models.CharField(max_length=30, null=True, blank=True)
-    employment = models.CharField(max_length=30, null=True, blank=True)
-    photo_albums = models.ManyToManyField(PhotoAlbum, blank=True, related_name='set_user')

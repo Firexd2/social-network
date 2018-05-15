@@ -32,8 +32,7 @@ urlpatterns = [
     path('<str:id>/', views.PageView.as_view(), name='page'),
     path('<str:id>/albums/', photo_views.ListAlbumView.as_view(), name='albums'),
     path('<str:id>/album/<str:pk>/', photo_views.DetailAlbumView.as_view(), name='album'),
-    path('<str:id>/friends/', friends_views.FriendsListView.as_view(), name='friends'),
-    path('<str:id>/friend_requests/', friends_views.FriendRequestsView.as_view(), name='friend_requests'),
+    path('<str:id>/friends/', include('friends.urls')),
 
 ] + static(settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
