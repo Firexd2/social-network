@@ -1,10 +1,14 @@
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
+from django.views.generic.edit import FormMixin
 from django.contrib.auth import views as auth
-from .forms import RegisterForm
-from .forms import CustomAuthenticationForm
+from django.shortcuts import redirect
+from .forms import RegisterForm, CustomAuthenticationForm, EditSettingsForm
 from .tools import send_verification_email, create_message
 from django.http import HttpResponseRedirect
 from base.views import BaseView
+from django.views.generic.edit import CreateView
+
+from base.mixins import MultiFormMixin, UserMixin
 
 
 class LoginFormView(auth.LoginView):
@@ -29,5 +33,15 @@ class RegisterFormView(FormView):
         return HttpResponseRedirect('/')
 
 
-class SettingsPageView(BaseView):
-    pass
+class SettingsPageView(TemplateView, UserMixin, MultiFormMixin):
+    template_name = 'settings.html'
+
+    form_classes = {'settings': EditSettingsForm}
+
+    def get_instance_form_settings(self):
+        return self.get_user
+
+    def get_success_url_form_settings(self):
+        new_url_page = self.request.POST['url_page']
+        id = new_url_page if new_url_page else self.request.user.id_page
+        return '/' + id + '/settings/'

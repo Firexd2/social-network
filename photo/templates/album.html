@@ -35,7 +35,10 @@
                         </span>
                     {% endfor %}
                 </div>
-                <button type="button" onclick="$.post('', {delete: true, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()});location.href=$('#back').attr('href')" class="btn btn-outline-danger">Удалить альбом</button>
+                <form method="POST">{% csrf_token %}
+                    <span hidden>{{ form_delete }}</span>
+                    <button type="submit" class="btn btn-outline-danger">Удалить альбом</button>
+                </form>
             </div>
         </div>
     </div>
@@ -45,11 +48,7 @@
                 Добавить новую фотографию
                 <hr>
                 <form method="POST" enctype="multipart/form-data">{% csrf_token %}
-                    <input type="text" name="photo" hidden>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1"><i class="fas fa-file"></i></span>
-                        <input type="file" name="photo" class="form-control">
-                    </div>
+                    {{ form_new_photo.as_p }}
                     <div>
                         <button class="btn btn-outline-success">Готово</button>
                         <button type="button" onclick="$('#modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
@@ -64,13 +63,7 @@
                 Редактирование альбома
                 <hr>
                 <form method="POST" name="edit-album"> {% csrf_token %}
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1"><i class="fas fa-camera-retro"></i></span>
-                        <input type="text" name="name" class="form-control" value="{{ object.name }}">
-                    </div>
-                    <div class="input-group">
-                        <textarea name="description" class="form-control">{{ object.description }}</textarea>
-                    </div>
+                    {{ form_album.as_p }}
                     <div>
                         <button class="btn btn-outline-success">Готово</button>
                         <button type="button" onclick="$('#edit-modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>

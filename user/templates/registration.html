@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-6 offset-md-3">
             <div class="register block">
-                <form name="auth" method="POST" action="">{% csrf_token %}
+                <form name="auth" method="POST">{% csrf_token %}
                     {% if form.non_field_errors %}
                         <div class="alert alert-danger" role="alert">
                             {{ form.non_field_errors }}
@@ -30,6 +30,10 @@
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1"><i class="fas fa-user"></i></span>
                         {{ form.last_name|attr:'placeholder:Фамилия'|attr:'class:form-control' }}
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1"><i class="fas fa-mars"></i></span>
+                        {{ form.sex|attr:'class:form-control' }}
                     </div>
                     <div class="alert alert-warning" role="alert">
                         {{ form.password1.help_text|safe }}

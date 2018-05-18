@@ -22,6 +22,7 @@ from base.views import general_search
 from sn import settings
 from photo import views as photo_views
 from friends import views as friends_views
+from user import views as user_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,6 +34,7 @@ urlpatterns = [
     path('<str:id>/albums/', photo_views.ListAlbumView.as_view(), name='albums'),
     path('<str:id>/album/<str:pk>/', photo_views.DetailAlbumView.as_view(), name='album'),
     path('<str:id>/friends/', include('friends.urls')),
+    path('<str:id>/settings/', user_views.SettingsPageView.as_view(), name='settings'),
 
 ] + static(settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

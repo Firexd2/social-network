@@ -1,0 +1,7 @@
+.block .input-group {
+    margin-bottom: 30px;
+}
+
+.block .input-group span {
+    padding: 0 !important;
+}

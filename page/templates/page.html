@@ -23,9 +23,8 @@
                             sub
                         {% else %}
                             <form action="{{ user.get_friends_page_url }}" method="POST">{% csrf_token %}
-                                <input hidden name="new-friend" type="text">
-                                <input type="text" name="id" hidden value="{{ current_user.id }}">
-                                <button type="submit" class="btn btn-outline-primary">Добавить в друзья</button>
+                                <input name="add-friend" value="{{ current_user.id }}" type="text" hidden>
+                                <button class="btn btn-outline-primary" type="submit">Добавить в друзья</button>
                             </form>
                         {% endif %}
                     {% endif %}

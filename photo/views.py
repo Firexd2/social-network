@@ -1,18 +1,20 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, HttpResponse
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, View
 from base.views import BaseView
 from photo.models import PhotoAlbum, Photo
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, DeletionMixin, DeleteView
 from django.views.generic.detail import BaseDetailView
-from .forms import NewPhotoForm, NewAlbumForm
 from django.http import HttpResponseRedirect
+
+from base.mixins import MultiFormMixin, UserMixin
+from .forms import AlbumForm, NewPhotoForm, CoverAlbumForm, DeleteAlbumForm
 
 
 class ListAlbumView(BaseView, FormMixin, ListView):
     model = PhotoAlbum
     template_name = 'albums.html'
-    form_class = NewAlbumForm
+    form_class = AlbumForm
 
     def post(self, *args, **kwargs):
         form = self.get_form()
@@ -32,34 +34,34 @@ class ListAlbumView(BaseView, FormMixin, ListView):
         return context
 
 
-class DetailAlbumView(BaseView, FormMixin, DetailView):
+class DetailAlbumView(DetailView, UserMixin, MultiFormMixin):
     model = PhotoAlbum
     template_name = 'album.html'
 
-    def args_for_action(self):
-        album = self.get_object()
-        return album,
+    form_classes = {'new_photo': NewPhotoForm,
+                    'album': AlbumForm,
+                    'cover': CoverAlbumForm,
+                    'delete': DeleteAlbumForm}
 
-    def get_form(self, form_class=None):
-        pass
-
-    def action_cover(self, album):
-        album.cover = self.request.POST['cover']
-        album.save()
-        return redirect(self.request.get_full_path())
-
-    def action_description(self, album):
-        album.name = self.request.POST['name']
-        album.description = self.request.POST['description']
-        album.save()
-        return redirect(self.request.get_full_path())
-
-    def action_photo(self, album):
-        photo = Photo(photo=self.request.FILES['photo'])
+    def valid_form_new_photo(self, **kwargs):
+        form = kwargs['form']
+        photo = form.save(commit=False)
         photo.save()
+        album = self.get_object()
         album.photos.add(photo)
-        return redirect(self.request.get_full_path())
+        return super().redirect_to_success_url(**kwargs)
 
-    def action_delete(self, album):
+    def valid_form_delete(self, **kwargs):
+        album = self.get_object()
         album.delete()
-        return redirect(self.request.get_full_path())
+        return super().redirect_to_success_url(**kwargs)
+
+    def get_success_url_form_delete(self):
+        return self.request.user.get_albums_page_url()
+
+    def get_instance_form_album(self):
+        return self.get_object()
+
+    def get_instance_form_cover(self):
+        return self.get_object()
+

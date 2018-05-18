@@ -2,9 +2,11 @@ body {
     background-color: rgba(252, 218, 241, 0.07);
 }
 
-input, button, .input-group-addon, .alert {
+input, button, select, .input-group-addon, .alert {
     border-radius: 0 !important;
 }
+
+h6 {}
 
 .navbar {
     padding: 0;
@@ -14,9 +16,13 @@ input, button, .input-group-addon, .alert {
     margin-top: 4px;
 }
 
-.btn, .input-group input, .input-group span, input {
+.btn, .input-group input, .input-group span, input, select {
     font-size: 13px !important;
     padding: 5px 8px 5px 8px !important;
+}
+
+select.form-control {
+    height: 28px !important;
 }
 
 .row {
@@ -26,6 +32,10 @@ input, button, .input-group-addon, .alert {
 
 form div {
     margin-bottom: 15px;
+}
+
+form label {
+    font-size: 13px
 }
 
 .border, .border div {
@@ -133,6 +143,8 @@ form[name=auth] button {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+
 
 /*#footer {*/
     /*display: flex;*/

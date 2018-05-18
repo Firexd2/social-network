@@ -23,7 +23,9 @@
                         </span>
                     {% endfor %}
                 </div>
-                <h6>Все фотографии</h6>
+                {% if object_list.first.photos.first %}
+                    <h6>Все фотографии</h6>
+                {% endif %}
                 <hr>
                 <div class="photos">
                     {% for album in object_list %}

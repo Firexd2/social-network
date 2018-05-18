@@ -18,10 +18,6 @@ class SettingsUser(models.Model):
                                       processors=[ResizeToFill(40, 40)],
                                       format='JPEG',
                                       options={'quality': 100})
-
-    date_of_birth = models.CharField(max_length=10, null=True, blank=True)
-    city = models.CharField(max_length=30, null=True, blank=True)
-    employment = models.CharField(max_length=30, null=True, blank=True)
     photo_albums = models.ManyToManyField(PhotoAlbum, blank=True, related_name='set_user')
 
 

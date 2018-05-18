@@ -1,10 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load imagekit %}
+{% block static %}
+        <link rel="stylesheet" href="{% static 'user/styles.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-9 padding">
+            <div class="block">
+                <h6>Настройки вашей страницы</h6>
+                <hr>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form_settings.as_p }}
+                    <button type="submit" class="btn btn-outline-info">Сохранить</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-3 padding">
+            <div class="block">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ user.get_settings_url_page }}">Основные</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

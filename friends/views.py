@@ -1,9 +1,10 @@
 from django.shortcuts import redirect
-from base.views import BaseView
+from base.mixins import ActionMixin, UserMixin
+from django.views.generic import TemplateView
 from user.models import User
 
 
-class FriendsListView(BaseView):
+class FriendsListView(TemplateView, UserMixin, ActionMixin):
 
     template_name = field = title = ''
 
@@ -17,10 +18,10 @@ class FriendsListView(BaseView):
 
         return context
 
-    def args_for_action(self):
-        return self.request.user, User.objects.get(id=self.request.POST['id'])
+    def action_add_friend(self):
 
-    def action_new_friend(self, user, other_user):
+        user = self.request.user
+        other_user = User.objects.get(id=self.request.POST['add-friend'])
 
         my_set = user.settings
         other_set = other_user.settings
@@ -39,7 +40,10 @@ class FriendsListView(BaseView):
 
         return redirect(self.request.get_full_path())
 
-    def action_delete_friend(self, user, other_user):
+    def action_delete_friend(self):
+
+        user = self.request.user
+        other_user = User.objects.get(id=self.request.POST['delete-friend'])
 
         # checking for friends
         if user.settings.friends.filter(id=other_user.id):

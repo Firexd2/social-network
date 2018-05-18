@@ -2,7 +2,6 @@ from django.urls import reverse
 from django.shortcuts import render, redirect, HttpResponse
 from django.views.generic import TemplateView, DetailView, RedirectView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import FormMixin, TemplateResponseMixin
 from base.views import BaseView
 from user.models import User
 from photo.models import Photo, PhotoAlbum

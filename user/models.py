@@ -10,15 +10,22 @@ from page.models import SettingsUser
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
+
     url = models.CharField(max_length=200, unique=True, blank=True, null=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+
+    first_name = models.CharField('Имя', max_length=30)
+    last_name = models.CharField('Фамилия', max_length=30)
+    sex = models.CharField('Пол', max_length=1, choices=(('М', 'Мужской'), ('Ж', 'Женский')))
+    date_of_birth = models.DateField('Дата рождения', null=True, blank=True)
+    city = models.CharField('Город', max_length=30, null=True, blank=True)
+    employment = models.CharField('Тип деятельности', max_length=30, null=True, blank=True)
+    url_page = models.SlugField('Адрес страницы', max_length=100, unique=True, null=True, blank=True)
+
     date_joined = models.DateTimeField(auto_now_add=True)
     last_activity = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     id_page = models.SlugField(max_length=100, blank=True)
-    url_page = models.SlugField(max_length=100, unique=True, null=True, blank=True)
     settings = models.OneToOneField('page.SettingsUser', on_delete=models.CASCADE, blank=True, null=True)
 
     objects = UserManager()
@@ -46,6 +53,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_subscriptions_page_url(self):
         return reverse('subscriptions', kwargs={'id': self.get_id})
+
+    def get_settings_page_url(self):
+        return reverse('settings', kwargs={'id': self.get_id})
 
     def get_absolute_url(self):
         return reverse('page', kwargs={'id': self.get_id})

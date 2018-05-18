@@ -8,9 +8,9 @@ def directory_path_photo(instance, filename):
 
 
 class PhotoAlbum(models.Model):
-    name = models.CharField(max_length=20)
-    description = models.TextField(blank=True, null=True)
-    cover = models.CharField(max_length=200, default=settings.NO_IMAGE)
+    name = models.CharField('Имя', max_length=20)
+    description = models.TextField('Описание', blank=True, null=True)
+    cover = models.CharField('Обложка', max_length=200, default=settings.NO_IMAGE)
     photos = models.ManyToManyField('Photo', related_name='album', blank=True)
 
     def get_absolute_url(self):
@@ -25,7 +25,7 @@ class PhotoAlbum(models.Model):
 
 
 class Photo(models.Model):
-    photo = models.ImageField(upload_to=directory_path_photo)
+    photo = models.ImageField('Фотография', upload_to=directory_path_photo)
     datetime = models.DateTimeField(auto_now_add=True)
     # name = models.CharField(max_length=100, null=True, blank=True)
     # description = models.TextField(blank=True, null=True)
