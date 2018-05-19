@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.base import ContextMixin
 from django.http import HttpResponseRedirect, Http404
+from django.views.generic.base import ContextMixin
+
 from user.models import User
 
 
@@ -50,22 +51,36 @@ class MultiFormMixin(ContextMixin):
         return HttpResponseRedirect(self.get_form_success_url(**kwargs))
 
     def get_form_initial(self, name_form):
-        initial = getattr(self, 'get_initial_form_' + name_form, self.form_initials.get(name_form))
+
+        attr_name = 'get_initial_form_' + name_form
+        default = self.form_initials.get(name_form)
+
+        initial = getattr(self, attr_name, default)
+
         return initial() if callable(initial) else initial
 
     def get_form_instance(self, name_form):
-        instance = getattr(self, 'get_instance_form_' + name_form, self.form_instances.get(name_form))
+
+        attr_name = 'get_instance_form_' + name_form
+        default = self.form_instances.get(name_form)
+
+        instance = getattr(self, attr_name, default)
+
         return instance() if callable(instance) else instance
 
     def get_form_success_url(self, **kwargs):
         name_form = kwargs['name_form']
-        success_url = getattr(self, 'get_success_url_form_' + name_form, self.form_success_urls.get(name_form))
+
+        attr_name = 'get_success_url_form_' + name_form
+        default = self.form_success_urls.get(name_form)
+
+        success_url = getattr(self, attr_name, default)
+
         return success_url() if callable(success_url) else success_url or self.request.get_full_path()
 
     def general_valid_form(self, **kwargs):
         # general valid form
         form = kwargs['form']
-
         form.save()
 
         return self.redirect_to_success_url(**kwargs)

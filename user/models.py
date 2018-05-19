@@ -1,21 +1,21 @@
-from __future__ import unicode_literals
 from datetime import datetime
-from django.db import models
-from django.contrib.auth.models import PermissionsMixin
+
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
+from django.db import models
 from django.urls import reverse
-from .manager import UserManager
+
 from page.models import SettingsUser
+from .manager import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
 
-    url = models.CharField(max_length=200, unique=True, blank=True, null=True)
-
-    first_name = models.CharField('Имя', max_length=30)
-    last_name = models.CharField('Фамилия', max_length=30)
+    first_name = models.CharField('Имя', max_length=15)
+    last_name = models.CharField('Фамилия', max_length=15)
     sex = models.CharField('Пол', max_length=1, choices=(('М', 'Мужской'), ('Ж', 'Женский')))
+    marital_status = models.CharField('Семейное положение', max_length=20, blank=True, null=True)
     date_of_birth = models.DateField('Дата рождения', null=True, blank=True)
     city = models.CharField('Город', max_length=30, null=True, blank=True)
     employment = models.CharField('Тип деятельности', max_length=30, null=True, blank=True)
@@ -67,14 +67,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.first_name
 
-    @staticmethod
-    def get_string_last_activity(last, now):
+    def get_string_last_activity(self, last, now):
+
+        sex_suffix = 'а' if self.sex == 'Ж' else ''
+        result = 'Заходил' + sex_suffix
+
         if last.date() == now.date():
-            return 'Заходил сегодня в %s:%s' % (last.hour, last.minute)
+            return result + ' сегодня в %s:%s' % (last.hour, last.minute)
         elif (now.date() - last.date()).days == 1:
-            return 'Заходил вчера в %s:%s' % (last.hour, last.minute)
+            return result + ' вчера в %s:%s' % (last.hour, last.minute)
         else:
-            return 'Заходил %s в %s:%s' % (last.date(), last.hour, last.minute)
+            return result + ' %s в %s:%s' % (last.date(), last.hour, last.minute)
 
     @property
     def get_last_online(self):

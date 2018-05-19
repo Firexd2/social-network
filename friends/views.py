@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
-from base.mixins import ActionMixin, UserMixin
 from django.views.generic import TemplateView
+
+from base.mixins import ActionMixin, UserMixin
 from user.models import User
 
 
@@ -55,8 +56,3 @@ class FriendsListView(TemplateView, UserMixin, ActionMixin):
             other_user.settings.subscriptions.add(user)
 
         return redirect(self.request.get_full_path())
-
-
-
-
-

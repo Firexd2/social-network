@@ -1,7 +1,7 @@
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
-from photo.models import directory_path_photo
+
 from photo.models import PhotoAlbum
 
 
@@ -18,6 +18,9 @@ class SettingsUser(models.Model):
                                       processors=[ResizeToFill(40, 40)],
                                       format='JPEG',
                                       options={'quality': 100})
+
+    status = models.CharField(max_length=100, blank=True, null=True)
+
     photo_albums = models.ManyToManyField(PhotoAlbum, blank=True, related_name='set_user')
 
 

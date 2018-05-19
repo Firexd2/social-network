@@ -1,17 +1,13 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect, HttpResponse
-from django.views.generic import ListView, DetailView, View
-from base.views import BaseView
-from photo.models import PhotoAlbum, Photo
-from django.views.generic.edit import FormMixin, DeletionMixin, DeleteView
-from django.views.generic.detail import BaseDetailView
-from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import FormMixin
 
 from base.mixins import MultiFormMixin, UserMixin
-from .forms import AlbumForm, NewPhotoForm, CoverAlbumForm, DeleteAlbumForm
+from photo.forms import AlbumForm, NewPhotoForm, CoverAlbumForm, DeleteAlbumForm
+from photo.models import PhotoAlbum, Photo
 
 
-class ListAlbumView(BaseView, FormMixin, ListView):
+class ListAlbumView(ListView, UserMixin, FormMixin):
     model = PhotoAlbum
     template_name = 'albums.html'
     form_class = AlbumForm
@@ -31,6 +27,7 @@ class ListAlbumView(BaseView, FormMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListAlbumView, self).get_context_data(**kwargs)
+        context['all_photos'] = Photo.objects.filter(album__set_user__user=self.get_user)
         return context
 
 

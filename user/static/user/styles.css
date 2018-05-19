@@ -5,3 +5,8 @@
 .block .input-group span {
     padding: 0 !important;
 }
+
+form[name=settings] label {
+    font-size: 13px;
+    color: #9c9c9c;
+}

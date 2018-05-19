@@ -1,14 +1,10 @@
-from django.views.generic import FormView, TemplateView
-from django.views.generic.edit import FormMixin
 from django.contrib.auth import views as auth
-from django.shortcuts import redirect
-from .forms import RegisterForm, CustomAuthenticationForm, EditSettingsForm
-from .tools import send_verification_email, create_message
 from django.http import HttpResponseRedirect
-from base.views import BaseView
-from django.views.generic.edit import CreateView
+from django.views.generic import FormView, TemplateView
 
 from base.mixins import MultiFormMixin, UserMixin
+from user.forms import RegisterForm, CustomAuthenticationForm, EditSettingsForm
+from user.tools import send_verification_email, create_message
 
 
 class LoginFormView(auth.LoginView):

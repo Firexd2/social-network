@@ -11,31 +11,37 @@
                 <h6 style="float: left; margin-bottom: 3px">
                     Альбомы пользователя
                     <b>{{ current_user.first_name }}</b>
-                    <span style="color: #bcbcbc; padding-left: 5px">{{ object_list.count }}</span></h6>
-                <a href="" style="float: right" data-toggle="modal" data-target=".bd-example-modal-md">Создать альбом</a>
+                    <span class="count">{{ object_list.count }}</span></h6>
+                {% if current_user == user %}
+                    <a href="" style="float: right" data-toggle="modal" data-target=".bd-example-modal-md">Создать альбом</a>
+                {% endif %}
                 <div style="clear: left"></div>
                 <hr>
-                <div class="albums">
-                    {% for album in object_list %}
-                        <span onclick="location.href='{{ album.get_absolute_url }}'">
+                {% if object_list %}
+                    <div class="albums">
+                        {% for album in object_list %}
+                            <span onclick="location.href='{{ album.get_absolute_url }}'">
                             <img style="width: 200px" src="{{ album.cover }}" alt="">
                             <p>{{ album.name }}</p>
                         </span>
-                    {% endfor %}
-                </div>
-                {% if object_list.first.photos.first %}
-                    <h6>Все фотографии</h6>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="margin-bottom: 0" class="short-info">
+                        Альбомов нет
+                    </p>
                 {% endif %}
-                <hr>
-                <div class="photos">
-                    {% for album in object_list %}
-                        {% for photo in album.photos.all %}
+                {% if all_photos %}
+                    <h6>Все фотографии <span class="count">{{ all_photos.count }}</span></h6>
+                    <hr>
+                    <div class="photos">
+                        {% for photo in all_photos %}
                             <span class="photo">
-                            <img style="width: 200px" onclick="location.href='/media/{{ photo.photo }}'" src="/media/{{ photo.photo }}" alt="">
+                            <img style="width: 200px" onclick="location.href='{{ photo.photo.url }}'" src="{{ photo.photo.url }}" alt="">
                         </span>
                         {% endfor %}
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -37,8 +37,12 @@
     display: inline-block;
 }
 
-.avatar .image {
-    margin-bottom: 20px;
+.avatar button {
+    margin-top: 10px;
+}
+
+.avatar button {
+    width: 200px;
 }
 
 .list-friend span {
@@ -54,7 +58,9 @@
     text-align: center;
     padding: 4px 0 4px 0;
     margin: 0;
-    color: blue;
+    color: #0275d8;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #button-wall {
@@ -63,4 +69,27 @@
 
 form div {
     margin-bottom: 0 !important;
+}
+
+form[name=wall] label, form[name=status] label {
+    display: none;
+}
+
+input[name=status] {
+    display: none;
+}
+
+input[name=status] {
+    font-size: 10px;
+    padding: 2px !important;
+}
+
+.status {
+    font-size: 13px;
+    color: #939393;
+}
+
+.status:hover {
+    background: #ebebeb;
+    cursor: pointer;
 }

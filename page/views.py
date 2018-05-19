@@ -1,14 +1,13 @@
-from django.urls import reverse
-from django.shortcuts import render, redirect, HttpResponse
-from django.views.generic import TemplateView, DetailView, RedirectView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from base.views import BaseView
-from user.models import User
+from django.urls import reverse
+from django.views.generic import TemplateView, RedirectView
+
+from base.mixins import UserMixin, MultiFormMixin
+from page.forms import NewAvatarForm, NewWrittingWalForm, EditStatusForm
 from photo.models import Photo, PhotoAlbum
-from .models import WritingWall
 
 
-class RedirectToMyPageView(LoginRequiredMixin, RedirectView):
+class RedirectToMyPageView(RedirectView, LoginRequiredMixin):
 
     permanent = True
     pattern_name = 'page'
@@ -19,41 +18,49 @@ class RedirectToMyPageView(LoginRequiredMixin, RedirectView):
         return reverse(self.pattern_name, kwargs={'id': id})
 
 
-class PageView(BaseView):
+class PageView(TemplateView, UserMixin, MultiFormMixin):
     template_name = 'page.html'
 
-    def args_for_action(self):
-        user = self.get_user
-        return user,
+    form_classes = {'new_avatar': NewAvatarForm,
+                    'new_writting_wall': NewWrittingWalForm,
+                    'status': EditStatusForm}
 
-    def action_avatar(self, *args):
+    def get_instance_form_status(self):
+        return self.request.user.settings
+
+    def valid_form_new_avatar(self, **kwargs):
+
+        form = kwargs['form']
+        photo = form.save()
+
         user = self.request.user
         user_settings = user.settings
 
         album, create = PhotoAlbum.objects.filter(set_user__user=user).\
             get_or_create(name='Фото со страницы')
+
         if create:
             user_settings.photo_albums.add(album)
-
-        photo = Photo(photo=self.request.FILES['avatar'])
-        photo.save()
 
         album.photos.add(photo)
 
         user_settings.avatar = photo.photo
         user_settings.save()
 
-        return redirect(self.request.get_full_path())
+        return self.redirect_to_success_url(**kwargs)
 
-    def action_wall(self, page_user):
+    def valid_form_new_writting_wall(self, **kwargs):
+        form = kwargs['form']
         user = self.request.user
+        current_user = self.get_user
 
-        writting_wall = WritingWall(message=self.request.POST['wall'], author=user)
-        writting_wall.save()
+        writting = form.save(commit=False)
+        writting.author = user
+        writting.save()
 
-        page_user.settings.wall.add(writting_wall)
+        current_user.settings.wall.add(writting)
 
-        return redirect(self.request.get_full_path())
+        return self.redirect_to_success_url(**kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)

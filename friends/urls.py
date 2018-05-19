@@ -3,7 +3,7 @@ from django.urls import path
 from friends import views as friends_views
 
 urlpatterns = [
-    path('', friends_views.FriendsListView.as_view(template_name='all.html',
+    path('', friends_views.FriendsListView.as_view(template_name='all_friends.html',
                                                    field='friends',
                                                    title='Все друзья'),
          name='friends'),

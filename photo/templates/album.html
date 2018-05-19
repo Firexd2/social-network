@@ -14,12 +14,14 @@
                 <hr>
                 <h6 style="float: left; margin-bottom: 3px">
                     Фотографий
-                    <span style="color: #8e8e8e; padding-left: 5px">{{ object.photos.count }}</span>
+                    <span class="count">{{ object.photos.count }}</span>
                 </h6>
                 <span style="float: right">
-                    <a href="" data-toggle="modal" data-target=".bd-example-modal-md">Добавить фотографии</a> |
-                    <a href=""  data-toggle="modal" data-target=".bd-example-modal-md-edit">Редактировать</a> |
-                    <a id="back" href="{{ object.get_previous_url }}">Назад</a>
+                    {% if current_user == user %}
+                        <a href="" data-toggle="modal" data-target=".bd-example-modal-md">Добавить фотографии</a> |
+                        <a href=""  data-toggle="modal" data-target=".bd-example-modal-md-edit">Редактировать</a> |
+                        <a id="back" href="{{ object.get_previous_url }}">Назад</a>
+                    {% endif %}
                  </span>
                 <div style="clear: left"></div>
                 <hr>
@@ -30,15 +32,17 @@
                 <div class="photos">
                     {% for photo in object.photos.all %}
                         <span class="photo">
-                            <img style="width: 200px" onclick="location.href='/media/{{ photo.photo }}'" src="/media/{{ photo.photo }}" alt="">
-                            <p id="{{ current_user.id }}" cover="/media/{{ photo.photo }}">Сделать обложкой</p>
+                            <img style="width: 200px" onclick="location.href='{{ photo.photo.url }}'" src="{{ photo.photo.url }}" alt="">
+                            <p id="{{ current_user.id }}" cover="{{ photo.photo.url }}">Сделать обложкой</p>
                         </span>
                     {% endfor %}
                 </div>
-                <form method="POST">{% csrf_token %}
-                    <span hidden>{{ form_delete }}</span>
-                    <button type="submit" class="btn btn-outline-danger">Удалить альбом</button>
-                </form>
+                {% if current_user == user %}
+                    <form method="POST">{% csrf_token %}
+                        {{ form_delete }}
+                        <button type="submit" class="btn btn-outline-danger">Удалить альбом</button>
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>

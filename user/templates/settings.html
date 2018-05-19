@@ -11,7 +11,7 @@
             <div class="block">
                 <h6>Настройки вашей страницы</h6>
                 <hr>
-                <form method="POST">
+                <form name="settings" method="POST">
                     {% csrf_token %}
                     {{ form_settings.as_p }}
                     <button type="submit" class="btn btn-outline-info">Сохранить</button>
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="col-lg-3 padding">
-            <div class="block">
+            <div class="block right-menu">
                 <ul class="nav">
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ user.get_settings_url_page }}">Основные</a>

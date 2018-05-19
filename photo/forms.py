@@ -14,7 +14,7 @@ class AlbumForm(forms.ModelForm):
 class NewPhotoForm(forms.ModelForm):
     class Meta:
         model = Photo
-        exclude = []
+        fields = '__all__'
         widgets = {'photo': forms.FileInput(attrs={'class': 'form-control'})}
 
 
@@ -26,7 +26,7 @@ class CoverAlbumForm(forms.ModelForm):
 
 class DeleteAlbumForm(forms.ModelForm):
 
-    id = forms.CharField(widget=forms.TextInput(attrs={'hidden': 'true', 'value': 'delete'}))
+    id = forms.CharField(widget=forms.HiddenInput(attrs={'value': 'true'}))
 
     class Meta:
         model = PhotoAlbum

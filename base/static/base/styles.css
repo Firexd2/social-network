@@ -2,11 +2,13 @@ body {
     background-color: rgba(252, 218, 241, 0.07);
 }
 
-input, button, select, .input-group-addon, .alert {
+input, button, select, textarea, .input-group-addon, .alert {
     border-radius: 0 !important;
 }
 
-h6 {}
+.table {
+    margin-bottom: 0 !important;
+}
 
 .navbar {
     padding: 0;
@@ -96,11 +98,6 @@ form[name=auth] button {
     color: deepskyblue;
 }
 
-.status {
-    font-size: 13px;
-    color: #939393;
-}
-
 .left-menu {
     font-size: 13px;
     opacity: 0.8;
@@ -144,6 +141,14 @@ form[name=auth] button {
     border-top-right-radius: 0;
 }
 
+.count {
+    color: #bcbcbc;
+    padding-left: 5px
+}
+
+.right-menu {
+    font-size: 14px;
+}
 
 
 /*#footer {*/
