@@ -7,7 +7,7 @@ from page.forms import NewAvatarForm, NewWrittingWalForm, EditStatusForm
 from photo.models import Photo, PhotoAlbum
 
 
-class RedirectToMyPageView(RedirectView, LoginRequiredMixin):
+class RedirectToMyPageView(LoginRequiredMixin, RedirectView):
 
     permanent = True
     pattern_name = 'page'

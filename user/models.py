@@ -57,6 +57,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_settings_page_url(self):
         return reverse('settings', kwargs={'id': self.get_id})
 
+    def get_messages_page_url(self):
+        return reverse('messages', kwargs={'id': self.get_id})
+
     def get_absolute_url(self):
         return reverse('page', kwargs={'id': self.get_id})
 

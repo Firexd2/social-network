@@ -128,18 +128,21 @@ class MultiFormMixin(ContextMixin):
         return context
 
 
-class ActionMixin:
-
-    suffix_method = 'action_'
+class ActionMixin(ContextMixin):
 
     def post(self, *args, **kwargs):
+
         dict_post = self.request.POST.copy()
-        dict_post.pop('csrfmiddlewaretoken', None)
+        list_names = list(dict_post.keys())
 
-        name = list(dict_post.keys())
+        action = [name for name in list_names if 'action' == name[:6]]
 
-        if len(name) != 1:
-            raise AttributeError
+        if len(action) > 1:
+            raise AttributeError('Слишком большое количество action_ input')
+        elif len(action) == 0:
+            raise AttributeError('Не найдено ни одного action_ input')
 
-        handler_action = getattr(self, self.suffix_method + name[0].replace('-', '_'), None)
+        name = action[0]
+
+        handler_action = getattr(self, name.replace('-', '_'), None)
         return handler_action()

@@ -71,7 +71,7 @@ form div {
     margin-bottom: 0 !important;
 }
 
-form[name=wall] label, form[name=status] label {
+form[name=wall] label, form[name=status] label, form[name=new-message] label {
     display: none;
 }
 

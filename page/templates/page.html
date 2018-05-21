@@ -18,13 +18,18 @@
                         <button data-toggle="modal" data-target=".bd-example-modal-md" class="btn btn-outline-success">Новое фото</button>
                     {% else %}
                         {% if current_user in user.settings.friends.all %}
-                            <button class="btn btn-outline-primary">Написать сообщение</button>
-                            <button style="opacity: 0.6" class="btn btn-outline-danger">Убрать из друзей</button>
+                            <button data-toggle="modal" data-target=".new-message" class="btn btn-outline-primary">Написать сообщение</button>
+
+                            <form action="{{ user.get_friends_page_url }}" method="POST">{% csrf_token %}
+                                <input name="action-delete-friend" value="{{ current_user.id }}" type="text" hidden>
+                                <button style="opacity: 0.6" class="btn btn-outline-danger" type="submit">Убрать из друзей</button>
+                            </form>
+
                         {% elif current_user in user.settings.subscriptions.all %}
                             sub
                         {% else %}
                             <form action="{{ user.get_friends_page_url }}" method="POST">{% csrf_token %}
-                                <input name="add-friend" value="{{ current_user.id }}" type="text" hidden>
+                                <input name="action-add-friend" value="{{ current_user.id }}" type="text" hidden>
                                 <button class="btn btn-outline-primary" type="submit">Добавить в друзья</button>
                             </form>
                         {% endif %}
@@ -186,6 +191,22 @@
                 <hr>
                 <form name="new-avatar" method="POST" enctype="multipart/form-data">{% csrf_token %}
                     {{ form_new_avatar.as_p }}
+                    <div>
+                        <button class="btn btn-outline-success">Готово</button>
+                        <button type="button" onclick="$('.modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade new-message" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                Новое сообщение
+                <hr>
+                <form action="{{ user.get_messages_page_url }}" name="new-message" method="POST">
+                    {% csrf_token %}
+                    Сделать инпуты action
                     <div>
                         <button class="btn btn-outline-success">Готово</button>
                         <button type="button" onclick="$('.modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>

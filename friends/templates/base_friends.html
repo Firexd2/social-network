@@ -30,9 +30,11 @@
                                         {% thumbnail '100x100' friend.settings.avatar %}
                                     </td>
                                     <td>
-                                        <p style="margin-bottom: 0;color: blue">{{ friend.get_full_name }}</p>
+                                        <p style="margin-bottom: 0;color: #0275d8;">{{ friend.get_full_name }}</p>
                                         <p style="font-size: 14px; color: #9c9c9c">{{ friend.get_last_online }}</p>
-                                        <div>{% block buttons %}{% endblock %}</div>
+                                        {% if current_user == user %}
+                                            <div>{% block buttons %}{% endblock %}</div>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -45,17 +47,17 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-lg-3 padding">
-            <div class="block">
+        <div class="col-lg-3">
+            <div class="block-menu right-menu">
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ user.get_friends_page_url }}">Все друзья</a>
+                        <a class="nav-link" href="{{ current_user.get_friends_page_url }}">Все друзья</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ user.get_subscribers_page_url }}">Подписчики</a>
+                        <a class="nav-link" href="{{ current_user.get_subscribers_page_url }}">Подписчики</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ user.get_subscriptions_page_url }}">Подписки</a>
+                        <a class="nav-link" href="{{ current_user.get_subscriptions_page_url }}">Подписки</a>
                     </li>
                 </ul>
             </div>

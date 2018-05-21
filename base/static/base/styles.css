@@ -95,7 +95,7 @@ form[name=auth] button {
 }
 
 .short-info th {
-    color: deepskyblue;
+    color: #0275d8;
 }
 
 .left-menu {
@@ -150,6 +150,21 @@ form[name=auth] button {
     font-size: 14px;
 }
 
+.block-menu {
+    background-color: white;
+    box-shadow: 0 0 1px black;
+    margin: 12px 0 12px 0;
+    padding: 10px 0 10px 0;
+}
+
+.block-menu a {
+    padding: 4px 12px 4px 12px;
+}
+
+
+.block-menu .active {
+    background: rgba(135,206,250,0.16)
+}
 
 /*#footer {*/
     /*display: flex;*/

@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('textarea').on('focusin', function () {
+    $('textarea[name=message]').on('focusin', function () {
         $('#button-wall').show()
     });
     $(document).mouseup(function (e) {

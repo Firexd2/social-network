@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 {% load imagekit %}
 {% block static %}
-        <link rel="stylesheet" href="{% static 'user/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'user/styles.css' %}">
 {% endblock %}
 {% block content %}
     <div class="row">
@@ -18,11 +18,11 @@
                 </form>
             </div>
         </div>
-        <div class="col-lg-3 padding">
-            <div class="block right-menu">
+        <div class="col-lg-3">
+            <div class="block-menu right-menu">
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ user.get_settings_url_page }}">Основные</a>
+                        <a class="nav-link" href="{{ user.get_settings_page_url }}">Основные</a>
                     </li>
                 </ul>
             </div>

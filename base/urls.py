@@ -17,12 +17,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
-from page import views
+
 from base.views import general_search
-from sn import settings
+from page import views
 from photo import views as photo_views
-from friends import views as friends_views
+from sn import settings
 from user import views as user_views
+from chat import views as chat_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,6 +36,7 @@ urlpatterns = [
     path('<str:id>/album/<str:pk>/', photo_views.DetailAlbumView.as_view(), name='album'),
     path('<str:id>/friends/', include('friends.urls')),
     path('<str:id>/settings/', user_views.SettingsPageView.as_view(), name='settings'),
+    path('<str:id>/messages/', chat_views.TheardsListView.as_view(), name='messages')
 
 ] + static(settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

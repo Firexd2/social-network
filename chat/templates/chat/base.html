@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load imagekit %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'chat/styles.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-9 padding">
+            <div class="block">
+                {{ object_list }}
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="block-menu right-menu">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ current_user.get_messages_page_url }}">Все беседы</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'chat/scripts.js' %}"></script>
+{% endblock %}

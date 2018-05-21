@@ -10,19 +10,20 @@ class FriendsListView(TemplateView, UserMixin, ActionMixin):
     template_name = field = title = ''
 
     def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(TemplateView, self).get_context_data(**kwargs)
         context['list'] = eval('self.get_user.settings.' + self.field + '.all()')
         context['title'] = self.title
 
         if self.request.GET.get('section') == 'online':
             context['list'] = list(filter(lambda x: x.get_last_online == 'online', context['list']))
-
         return context
 
     def action_add_friend(self):
 
+        other_user_id = self.request.POST['action-add-friend']
+
         user = self.request.user
-        other_user = User.objects.get(id=self.request.POST['add-friend'])
+        other_user = User.objects.get(id=other_user_id)
 
         my_set = user.settings
         other_set = other_user.settings
@@ -43,11 +44,13 @@ class FriendsListView(TemplateView, UserMixin, ActionMixin):
 
     def action_delete_friend(self):
 
+        other_user_id = self.request.POST['action-delete-friend']
+
         user = self.request.user
-        other_user = User.objects.get(id=self.request.POST['delete-friend'])
+        other_user = User.objects.get(id=other_user_id)
 
         # checking for friends
-        if user.settings.friends.filter(id=other_user.id):
+        if user.settings.friends.filter(id=other_user_id):
             # remove friend
             user.settings.friends.remove(other_user)
             other_user.settings.friends.remove(user)

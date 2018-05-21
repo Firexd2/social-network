@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'photo',
     'friends',
     'imagekit',
+    'chat',
 ]
 
 MIDDLEWARE = [
