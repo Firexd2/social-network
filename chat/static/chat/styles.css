@@ -1,0 +1,49 @@
+.search-message .input-group-addon, .search-message input {
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+}
+
+.search-message {
+    margin-bottom: 5px;
+}
+
+.search-message input:focus {border-bottom: none;}
+
+/*1px solid rgba(0,0,0,.15)*/
+
+
+
+.item-chat {
+    font-size: 13px;
+}
+
+.item-chat td {
+    padding: 10px 10px 10px 5px;
+}
+
+.item-chat tr:hover {
+    cursor: pointer;
+    background: #ececec;
+}
+
+
+
+.last-message {
+    width: 400px;
+    overflow: hidden;
+    white-space: nowrap;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.last-message img span {
+    display: inline-block;
+}
+
+.name-chat {
+    margin-top: -3px;
+    padding-bottom: 8px;
+}

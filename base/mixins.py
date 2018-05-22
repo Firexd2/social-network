@@ -26,10 +26,10 @@ class UserMixin(LoginRequiredMixin):
             if not (user_id == request.user.id_page or user_id == request.user.url_page):
                 raise Http404()
 
-        return super().dispatch(request, *args, **kwargs)
+        return super(UserMixin, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(UserMixin, self).get_context_data(**kwargs)
         context['current_user'] = self.get_user
         return context
 
@@ -121,7 +121,7 @@ class MultiFormMixin(ContextMixin):
         return form(initial=self.get_form_initial(name_form), instance=self.get_form_instance(name_form))
 
     def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(MultiFormMixin, self).get_context_data(**kwargs)
         for name_form in self.form_classes:
             if 'form_' + name_form not in kwargs:
                 context['form_' + name_form] = self.get_form(name_form)
