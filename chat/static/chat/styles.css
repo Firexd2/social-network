@@ -1,3 +1,5 @@
+textarea {overflow: hidden}
+
 .search-message .input-group-addon, .search-message input {
     background: none;
     border-left: none;
@@ -16,20 +18,18 @@
 
 
 
-.item-chat {
+table.table-chat {
     font-size: 13px;
 }
 
-.item-chat td {
+table.table-chat td {
     padding: 10px 10px 10px 5px;
 }
 
-.item-chat tr:hover {
+table.table-chat tr:hover {
     cursor: pointer;
     background: #ececec;
 }
-
-
 
 .last-message {
     width: 400px;
@@ -46,4 +46,92 @@
 .name-chat {
     margin-top: -3px;
     padding-bottom: 8px;
+}
+
+.header-chat {
+    text-align: center;
+}
+
+table.table-header-chat td {
+    border-top: none;
+    border-bottom: 1px solid #eceeef;
+    text-align: center;
+    font-size: 14px;
+    padding-bottom: 10px;
+    line-height: 1.2;
+}
+
+.info-chat {
+    font-size: 12px;
+    color: darkgray;
+}
+
+.chat {
+    text-align: center;
+    position: relative;
+}
+
+.chat-log {
+    padding: 15px 12px 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    max-height: 100%;
+}
+
+.chat-item {
+    text-align: left;
+}
+
+table.table-item-chat {
+    display: inline-block;
+}
+
+table.table-item-chat td {
+    border-top: none;
+}
+
+table.table-item-chat .info, table.table-item-chat .text {
+    font-size: 14px;
+}
+
+table.table-item-chat .text {
+    min-width: 200px;
+}
+
+.time-messages {
+    font-size: 12px;
+    color: darkgray;
+}
+
+table.table-footer-chat {
+}
+
+.table-footer-chat td {
+    padding-top: 10px;
+}
+
+.btn-send {
+    background: none;
+    border: none;
+}
+
+.fa-paper-plane {
+    opacity: 0.2;
+    transition: 0.3s;
+}
+
+.btn-send:hover .fa-paper-plane {
+    opacity: 0.7;
+    transition: 0.3s;
+
+}
+
+.btn-send:focus {
+    outline: none;
+}
+
+.no-read {
+    background: #eceeef
 }

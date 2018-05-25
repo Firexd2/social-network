@@ -16,8 +16,8 @@
                         <input type="text" placeholder="Поиск" class="form-control">
                     </div>
                 </div>
-                <div class="list-messages">
-                    <table class="table table-sm item-chat">
+                <div>
+                    <table class="table table-sm table-chat">
                         <tbody>
                         {% for room in object_list %}
                             <tr onclick="location.href='{{ room.object.get_absolute_url }}'">
@@ -26,14 +26,22 @@
                                     <div class="name-chat">
                                         <b>{{ room.name }}</b>
                                     </div>
-                                    <div class="last-message">
+{#                                    {% if not user in room.object.messages.last.read.all %}no-read{% endif %}#}
+                                    <div class="last-message
+                                    {% if room.object.messages.last.author != user %}
+                                        {% if not user in room.object.messages.last.read.all %}no-read{% endif %}
+                                    {% else %}
+                                        {% if not room.object.messages.last.author in room.object.messages.last.read.all %}no-read{% endif %}
+                                    {% endif %}">
                                         {% thumbnail '25x25' room.object.messages.last.author.settings.avatar %}
                                         <span class="message">{{ room.object.messages.last.text }}</span>
                                     </div>
                                 </td>
-                                <td style="text-align: right" width="100">{{ room.object.messages.last.datetime|date:'H:m' }}</td>
+                                <td style="text-align: right" width="100">{{ room.object.messages.last.datetime|date:'H:i' }}</td>
                             </tr>
                         {% endfor %}
+
+
                         </tbody>
                     </table>
                 </div>
@@ -44,6 +52,9 @@
                 <ul class="nav">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ current_user.get_messages_page_url }}">Все беседы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Создание беседы</a>
                     </li>
                 </ul>
             </div>

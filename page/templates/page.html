@@ -207,7 +207,7 @@
                 <form action="{{ user.get_messages_page_url }}" name="new-message" method="POST">
                     {% csrf_token %}
                     <input hidden value="{{ current_user.id }}" name="destination" type="text">
-                    <textarea name="action-dialog-message" placeholder="Сообщение" class="form-control" cols="52" rows="5"></textarea>
+                    <textarea name="action-new-message" placeholder="Сообщение" class="form-control" cols="52" rows="1"></textarea>
                     <div style="margin-top: 15px">
                         <button class="btn btn-outline-success">Готово</button>
                         <button type="button" onclick="$('.modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>

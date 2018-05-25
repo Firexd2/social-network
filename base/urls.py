@@ -31,13 +31,13 @@ urlpatterns = [
     path('favicon.ico/', RedirectView.as_view(url='/static/image/favicon.ico'), name='favicon'),
     path('general_search/', general_search),
     path('', views.RedirectToMyPageView.as_view()),
-    path('dialog/<str:pk>/', chat_views.ChatDetailView.as_view(), name='chat'),
+    path('dialog/<str:pk>/', chat_views.RoomDetailView.as_view(), name='chat'),
     path('<str:id>/', views.PageView.as_view(), name='page'),
     path('<str:id>/albums/', photo_views.ListAlbumView.as_view(), name='albums'),
     path('<str:id>/album/<str:pk>/', photo_views.DetailAlbumView.as_view(), name='album'),
     path('<str:id>/friends/', include('friends.urls')),
     path('<str:id>/settings/', user_views.SettingsPageView.as_view(), name='settings'),
-    path('<str:id>/messages/', chat_views.TheardsListView.as_view(), name='messages'),
+    path('<str:id>/messages/', chat_views.RoomsListView.as_view(), name='messages'),
 
 ] + static(settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

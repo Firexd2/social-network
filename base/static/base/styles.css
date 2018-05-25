@@ -2,6 +2,30 @@ body {
     background-color: rgba(252, 218, 241, 0.07);
 }
 
+::-webkit-scrollbar-button {
+    width: 3px;
+    height: 0
+}
+
+::-webkit-scrollbar-track {
+    background-color: white;
+    box-shadow: 0 0 3px white inset;
+}
+
+::-webkit-scrollbar-thumb {
+    box-shadow: 0 1px 1px #fff inset;
+    background: #eceeef no-repeat center;
+}
+
+::-webkit-resizer{
+    width: 3px;
+    height: 0;
+}
+
+::-webkit-scrollbar{
+    width: 5px;
+}
+
 input, button, select, textarea, .input-group-addon, .alert {
     border-radius: 0 !important;
 }
@@ -164,6 +188,10 @@ form[name=auth] button {
 
 .block-menu .active {
     background: rgba(135,206,250,0.16)
+}
+
+.min-block {
+    padding: 10px 20px 10px 20px
 }
 
 /*#footer {*/

@@ -7,6 +7,7 @@ class Message(models.Model):
     author = models.ForeignKey('user.User', on_delete=models.CASCADE)
     text = models.TextField()
     datetime = models.DateTimeField(auto_now_add=True)
+    read = models.ManyToManyField('user.User', related_name='having_read_user')
 
 
 class Room(models.Model):
@@ -22,6 +23,14 @@ class Room(models.Model):
 
     def get_absolute_url(self):
         return reverse('chat', kwargs={'pk': self.id})
+
+    @staticmethod
+    def get_or_none(id):
+        if id:
+            try:
+                return Room.objects.get(id=id)
+            except Room.DoesNotExist:
+                pass
 
 
 # class Dialog(models.Model):
