@@ -46,12 +46,12 @@ class DetailAlbumView(DetailView, UserMixin, MultiFormMixin):
         photo.save()
         album = self.get_object()
         album.photos.add(photo)
-        return super().redirect_to_success_url(**kwargs)
+        return super(DetailAlbumView, self).redirect_to_success_url(**kwargs)
 
     def valid_form_delete(self, **kwargs):
         album = self.get_object()
         album.delete()
-        return super().redirect_to_success_url(**kwargs)
+        return super(DetailAlbumView, self).redirect_to_success_url(**kwargs)
 
     def get_success_url_form_delete(self):
         return self.request.user.get_albums_page_url()

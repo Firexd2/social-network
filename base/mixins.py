@@ -7,7 +7,7 @@ from user.models import User
 
 class UserMixin(LoginRequiredMixin):
 
-    private_pages = ['settings', 'message']
+    # private_pages = ['settings', 'message']
 
     @property
     def get_user(self):
@@ -17,16 +17,16 @@ class UserMixin(LoginRequiredMixin):
             user = User.objects.get(id_page=self.kwargs['id'])
         return user
 
-    def dispatch(self, request, *args, **kwargs):
-
-        current_page = request.path[1:-1].split('/')[-1]
-        user_id = kwargs['id']
-
-        if current_page in self.private_pages:
-            if not (user_id == request.user.id_page or user_id == request.user.url_page):
-                raise Http404()
-
-        return super(UserMixin, self).dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #
+    #     current_page = request.path[1:-1].split('/')[-1]
+    #     user_id = kwargs['id']
+    #
+    #     if current_page in self.private_pages:
+    #         if not (user_id == request.user.id_page or user_id == request.user.url_page):
+    #             raise Http404()
+    #
+    #     return super(UserMixin, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super(UserMixin, self).get_context_data(**kwargs)

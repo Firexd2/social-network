@@ -1,10 +1,13 @@
 from django.contrib.auth import views as auth
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.views.generic import FormView, TemplateView
 
 from base.mixins import MultiFormMixin, UserMixin
 from user.forms import RegisterForm, CustomAuthenticationForm, EditSettingsForm
 from user.tools import send_verification_email, create_message
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class LoginFormView(auth.LoginView):
@@ -29,15 +32,13 @@ class RegisterFormView(FormView):
         return HttpResponseRedirect('/')
 
 
-class SettingsPageView(TemplateView, UserMixin, MultiFormMixin):
+class SettingsPageView(TemplateView, LoginRequiredMixin, MultiFormMixin):
     template_name = 'settings.html'
 
     form_classes = {'settings': EditSettingsForm}
 
     def get_instance_form_settings(self):
-        return self.get_user
+        return self.request.user
 
     def get_success_url_form_settings(self):
-        new_url_page = self.request.POST['url_page']
-        id = new_url_page if new_url_page else self.request.user.id_page
-        return '/' + id + '/settings/'
+        return reverse('settings')

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from base.mixins import UserMixin, ActionMixin
 from chat.models import Room, Message
 from user.models import User
@@ -8,14 +8,15 @@ from django.db.models import Q, F
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-def get_data(user, room):
+def get_data(i, room):
 
     if room.users.count() > 2:
+
         name = room.name
         logo = room.logo
         info = str(room.users.count()) + ' участн.'
     else:
-        other_user = room.get_other_user(user)
+        other_user = [user for user in room.users.all() if user != i][0]
 
         name = other_user.get_full_name()
         logo = other_user.settings.avatar
@@ -24,7 +25,7 @@ def get_data(user, room):
     return {'name': name, 'logo': logo, 'info': info, 'object': room}
 
 
-class RoomsListView(ListView, UserMixin, ActionMixin):
+class RoomsListView(ListView, LoginRequiredMixin, ActionMixin):
 
     template_name = 'chat/base.html'
 
@@ -66,12 +67,12 @@ class RoomsListView(ListView, UserMixin, ActionMixin):
 
                 # такой комнаты нету, создаем её
 
-                dialog = Room()
-                dialog.save()
-                dialog.users.add(addressee, destination)
+                room = Room()
+                room.save()
+                room.users.add(addressee, destination)
 
-                addressee.settings.rooms.add(dialog)
-                destination.settings.rooms.add(dialog)
+                addressee.settings.rooms.add(room)
+                destination.settings.rooms.add(room)
 
         # добавляем новое сообщение
 
@@ -88,7 +89,7 @@ class RoomDetailView(DetailView, LoginRequiredMixin, ActionMixin):
     model = Room
 
     def get_object(self, queryset=None):
-        room = get_data(self.request.user, super().get_object())
+        room = get_data(self.request.user, super(RoomDetailView, self).get_object())
         self.read_to_message(room['object'])
         return room
 
@@ -100,3 +101,6 @@ class RoomDetailView(DetailView, LoginRequiredMixin, ActionMixin):
         for message in no_read_messages:
             message.read.add(user)
 
+
+class NewRoomView(TemplateView, LoginRequiredMixin, ActionMixin):
+    template_name = 'chat/new_room.html'

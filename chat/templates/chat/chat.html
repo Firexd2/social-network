@@ -24,7 +24,7 @@
                 <div class="chat">
                     <div class="chat-log">
                         {% for message in object.object.messages.all %}
-                            <div class="chat-item {% if not user in message.read.all %}no-read{% endif %}">
+                            <div class="chat-item {% if message.author.id != user.id %}{% if user not in message.read.all %}no-read{% endif %}{% else %}{% if message.read.all.count < 2 %}no-read{% endif %}{% endif %}">
                                 <table class="table table-sm table-item-chat">
                                     <tbody>
                                     {% ifchanged message.author.get_short_name %}
@@ -50,7 +50,7 @@
                 <table class="table table-sm table-footer-chat">
                     <tbody>
                     <tr>
-                        <form action="{{ user.get_messages_page_url }}" name="new-message" method="POST">
+                        <form action="{% url 'rooms' %}" name="new-message" method="POST">
                             <td>
                                 {% csrf_token %}
                                 <textarea name="action-new-message" placeholder="Напишите сообщение..." class="form-control" cols="50" rows="1"></textarea>

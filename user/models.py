@@ -39,8 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def get_id(self):
-        id = self.url_page if self.url_page else self.id_page
-        return id
+        return self.url_page if self.url_page else self.id_page
 
     def get_albums_page_url(self):
         return reverse('albums', kwargs={'id': self.get_id})
@@ -53,12 +52,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_subscriptions_page_url(self):
         return reverse('subscriptions', kwargs={'id': self.get_id})
-
-    def get_settings_page_url(self):
-        return reverse('settings', kwargs={'id': self.get_id})
-
-    def get_messages_page_url(self):
-        return reverse('messages', kwargs={'id': self.get_id})
 
     def get_absolute_url(self):
         return reverse('page', kwargs={'id': self.get_id})

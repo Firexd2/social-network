@@ -88,7 +88,7 @@ table.table-item-chat {
     display: inline-block;
 }
 
-table.table-item-chat td {
+table.table-item-chat td, table.list-friends td {
     border-top: none;
 }
 
@@ -134,4 +134,44 @@ table.table-footer-chat {
 
 .no-read {
     background: #eceeef
+}
+
+.selected-friends {
+    width: 100%;
+    white-space: normal;
+    border-top: 1px solid #eceeef;
+    border-bottom: 1px solid #eceeef;
+    padding: 15px 0 0 0;
+}
+
+.selected-friends div {
+    display: inline-block;
+    font-size: 12px;
+    margin-left: 5px;
+    background: #ebebeb;
+    padding: 8px 6px 8px 8px;
+    margin-bottom: 7px;
+}
+
+.selected-friends i {
+    padding: 0 3px 0 3px;
+    cursor: pointer;
+    opacity: 0.4;
+}
+
+.selected-friends i:hover {
+    opacity: 1;
+}
+
+table.list-friends tr {
+    cursor: pointer;
+    border-bottom: 1px solid #eceeef;
+}
+
+table.list-friends tr:hover {
+    background: #eceeef;
+}
+
+button[name=new-room] {
+    display: none;
 }

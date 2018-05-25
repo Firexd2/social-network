@@ -1,0 +1,33 @@
+{% extends 'chat/base.html' %}
+{% load imagekit %}
+{% block content_chat %}
+    <div class="search-message">
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">
+                 <i class="fas fa-search"></i>
+            </span>
+            <input name="search-friend" type="text" placeholder="Поиск друзей" class="form-control">
+        </div>
+    </div>
+    <div class="selected-friends">
+        <p style="margin-bottom: 6px;font-size: 12px; float: left">Выбрано <b class="count-friend">0</b></p> <button style="float: right" data-toggle="modal" name="new-room" class="btn btn-outline-info"><span class="type-room"></span></button>
+        <span style="clear: left"></span>
+        <hr style="border-top: 1px solid white;">
+    </div>
+    <table class="table table-sm list-friends">
+        <tbody>
+        {% for friend in user.settings.friends.all %}
+            <tr id="{{ friend.id }}" class="friend">
+                <td width="50">
+                    {% thumbnail '40x40' friend.settings.avatar %}
+                </td>
+                <td style="vertical-align: middle">
+                    <b style="font-size: 14px" class="name">{{ friend.get_full_name }}</b>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'modals/new_message.html' %}
+    {% include 'modals/create_room.html' %}
+{% endblock %}

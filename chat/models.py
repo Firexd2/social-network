@@ -17,12 +17,12 @@ class Room(models.Model):
 
     users = models.ManyToManyField('user.User')
 
-    def get_other_user(self, user):
-        users = self.users.all()
-        return [x for x in users if x != user][0]
+    # def get_other_user(self, user):
+    #     users = self.users.all()
+    #     return [x for x in users if x != user][0]
 
     def get_absolute_url(self):
-        return reverse('chat', kwargs={'pk': self.id})
+        return reverse('room', kwargs={'pk': self.id})
 
     @staticmethod
     def get_or_none(id):
