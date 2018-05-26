@@ -11,8 +11,9 @@ class Message(models.Model):
 
 
 class Room(models.Model):
-    name = models.CharField(max_length=20, blank=True, null=True)
-    logo = models.ImageField('Фотография', upload_to=directory_path_photo, blank=True, null=True)
+    name = models.CharField('Название беседы', max_length=20, null=True)
+    logo = models.ImageField('Лого', upload_to=directory_path_photo, default='no-image.gif/')
+
     messages = models.ManyToManyField(Message)
 
     users = models.ManyToManyField('user.User')
@@ -25,10 +26,10 @@ class Room(models.Model):
         return reverse('room', kwargs={'pk': self.id})
 
     @staticmethod
-    def get_or_none(id):
-        if id:
+    def get_or_none(id_room):
+        if id_room:
             try:
-                return Room.objects.get(id=id)
+                return Room.objects.get(id=id_room)
             except Room.DoesNotExist:
                 pass
 

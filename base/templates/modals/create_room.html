@@ -1,15 +1,14 @@
 <div class="modal fade create-room" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
-            Новое сообщение
+            Создание новой беседы
             <hr>
-            <form action="{% url 'rooms' %}" name="new-message" method="POST">
+            <form name="create-room" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input hidden value="{{ current_user.id }}" name="destination" type="text">
-                <textarea name="action-new-message" placeholder="Сообщение" class="form-control" cols="52" rows="1"></textarea>
+                {{ form_new_room.as_p }}
                 <div style="margin-top: 15px">
-                    <button class="btn btn-outline-success">Готово</button>
-                    <button type="button" onclick="$('.modal').modal('hide')" class="btn btn-outline-danger">2Отмена</button>
+                    <button class="btn btn-outline-success">Создать</button>
+                    <button type="button" onclick="$('.modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
                 </div>
             </form>
         </div>

@@ -11,13 +11,24 @@
                 <table class="table table-sm table-header-chat">
                     <tbody>
                     <tr>
-                        <td></td>
+                        <td width="40">
+                            {% thumbnail '40x40' object.logo %}
+                        </td>
                         <td>
                             <b>{{ object.name }}</b>
                             <br>
                             <span class="info-chat">{{ object.info }}</span>
                         </td>
-                        <td></td>
+                        <td width="40">
+                            <i class="fas fa-ellipsis-h fa-2x" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+{#                            <div class="dropdown-menu">#}
+{#                                <a class="dropdown-item" href="#">Action</a>#}
+{#                                <a class="dropdown-item" href="#">Another action</a>#}
+{#                                <a class="dropdown-item" href="#">Something else here</a>#}
+{#                                <div class="dropdown-divider"></div>#}
+{#                                <a class="dropdown-item" href="#">Separated link</a>#}
+{#                            </div>#}
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -50,7 +61,7 @@
                 <table class="table table-sm table-footer-chat">
                     <tbody>
                     <tr>
-                        <form action="{% url 'rooms' %}" name="new-message" method="POST">
+                        <form action="{% url 'rooms' %}" name="message" method="POST">
                             <td>
                                 {% csrf_token %}
                                 <textarea name="action-new-message" placeholder="Напишите сообщение..." class="form-control" cols="50" rows="1"></textarea>

@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, TemplateView
-from base.mixins import UserMixin, ActionMixin
+from base.mixins import UserMixin, ActionMixin, MultiFormMixin
 from chat.models import Room, Message
 from user.models import User
 from django.db.models import Q, F
+
+from chat.forms import NewRoomForm
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -14,7 +16,8 @@ def get_data(i, room):
 
         name = room.name
         logo = room.logo
-        info = str(room.users.count()) + ' участн.'
+        info = str(room.users.count()) + ' участника'
+
     else:
         other_user = [user for user in room.users.all() if user != i][0]
 
@@ -102,5 +105,35 @@ class RoomDetailView(DetailView, LoginRequiredMixin, ActionMixin):
             message.read.add(user)
 
 
-class NewRoomView(TemplateView, LoginRequiredMixin, ActionMixin):
+class NewRoomView(TemplateView, LoginRequiredMixin, MultiFormMixin):
     template_name = 'chat/new_room.html'
+
+    form_classes = {'new_room': NewRoomForm}
+
+    def valid_form_new_room(self, **kwargs):
+
+        # получаем форму, данные формы и экземляр user, создающего комнату
+        form = kwargs['form']
+        data = form.cleaned_data
+        user = self.request.user
+
+        # сохраняем форму и получаем экземпляр комнаты
+        room = form.save()
+
+        # создаем экземпляр сообщения
+        message = Message(text=data['first_message'], author=user)
+        message.save()
+
+        # получаем экземпляры пользователей, которые будут в беседе
+        users = [User.objects.get(id=user_id) for user_id in data['ids_users'].split(',')]
+        users.append(user)
+
+        # к каждому из пользователей добавляем созданную беседу
+        for u in users:
+            u.settings.rooms.add(room)
+
+        # добавляем сообщение и участников в беседу
+        room.users.add(*users)
+        room.messages.add(message)
+
+        return self.redirect_to_success_url(**kwargs)

@@ -9,7 +9,7 @@ $(document).ready(function () {
                 // $("#chatbox").append($(this).val() + "<br/>");
                 // $(this).val("");
                 e.preventDefault();
-                $('form[name=new-message]').submit();
+                $('form[name=message]').submit();
             }
         });
     });
@@ -91,6 +91,24 @@ $(document).ready(function () {
         $.post(to_redirect, data, function () {
             location.href=to_redirect
         })
+    });
+
+    $('form[name=create-room]').on('submit', function (e) {
+        e.preventDefault();
+        let data = $(this).serializeArray();
+
+        const friends_selected = $('.selected');
+        let ids = '';
+        for (let i=0;i<friends_selected.length;i++) {
+            ids += friends_selected.eq(i).attr('id') + ','
+        }
+
+        data[2].value = ids.slice(0, -1);
+
+        $.post('', data, function () {
+            location.href='/rooms/'
+        })
+
     })
 
 });

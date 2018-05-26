@@ -175,3 +175,12 @@ table.list-friends tr:hover {
 button[name=new-room] {
     display: none;
 }
+
+.fa-ellipsis-h {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.fa-ellipsis-h:hover {
+    opacity: 1;
+}
