@@ -2,6 +2,28 @@ body {
     background-color: #ededed;;
 }
 
+a {
+    color: #356f98;
+}
+
+.bg-faded {
+    background: #356f98;
+    border-radius: 0 !important;
+}
+
+.bg-faded .input-group-addon, .bg-faded input, .bg-faded input:focus  {
+    border: none;
+    background: white;
+}
+
+.nav-stacked i {
+    margin-right: 5px;
+}
+
+.navbar-brand {
+    color: white !important;
+}
+
 ::-webkit-scrollbar-button {
     width: 3px;
     height: 0
@@ -43,7 +65,7 @@ input, button, select, textarea, .input-group-addon, .alert {
 }
 
 .navbar .form-inline {
-    margin-top: 4px;
+    margin-top: 5px;
 }
 
 .btn, .input-group input, .input-group span, input, select, textarea {
@@ -126,17 +148,22 @@ form[name=auth] button {
 }
 
 .short-info th {
-    color: #0275d8;
+    color: #356f98;
+    font-weight: 500;
+}
+
+.form-control:focus {
+    border: 1px solid rgba(53, 111, 152, 0.87);
 }
 
 .left-menu {
     font-size: 13px;
     opacity: 0.8;
+    padding: 0;
 }
 
 .left-menu a:hover {
-    border-radius: 0;
-    background: #f1f1f1;
+    background: rgba(135,206,250,0.16);
 }
 
 .modal-content {
@@ -147,8 +174,8 @@ form[name=auth] button {
     display: none;
     background: white;
     position: absolute;
-    margin-top: 5px;
-    width: 216px;
+    margin-top: 1px;
+    width: 213px;
     box-shadow: 0 0 1px #9c9c9c;
     font-size: 13px;
     padding: 5px 10px 0 10px;

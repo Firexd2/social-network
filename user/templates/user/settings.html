@@ -1,6 +1,5 @@
 {% extends 'base/base.html' %}
 {% load staticfiles %}
-{% load widget_tweaks %}
 {% load imagekit %}
 {% block static %}
     <link rel="stylesheet" href="{% static 'user/styles.css' %}">
@@ -22,7 +21,7 @@
             <div class="block-menu right-menu">
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ user.get_settings_page_url }}">Основные</a>
+                        <a class="nav-link" href="{% url 'settings' %}">Основные</a>
                     </li>
                 </ul>
             </div>

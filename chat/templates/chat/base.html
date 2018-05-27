@@ -17,27 +17,33 @@
                             <input type="text" placeholder="Поиск" class="form-control">
                         </div>
                     </div>
-                    <div>
-                        <table class="table table-sm table-chat">
-                            <tbody>
-                            {% for room in object_list %}
-                                <tr onclick="location.href='{{ room.object.get_absolute_url }}'">
-                                    <td width="50">{% thumbnail '50x50' room.logo %}</td>
-                                    <td>
-                                        <div class="name-chat">
-                                            <b>{{ room.name }}</b>
-                                        </div>
-                                        <div class="last-message {% if room.object.messages.last.author.id != user.id %}{% if user not in room.object.messages.last.read.all %}no-read{% endif %}{% else %}{% if room.object.messages.last.read.all.count < 2 %}no-read{% endif %}{% endif %}">
-                                            {% thumbnail '25x25' room.object.messages.last.author.settings.avatar %}
-                                            <span class="message">{{ room.object.messages.last.text }}</span>
-                                        </div>
-                                    </td>
-                                    <td style="text-align: right" width="100">{{ room.object.messages.last.datetime|date:'H:i' }}</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    {% if object_list %}
+                        <div>
+                            <table class="table table-sm table-chat">
+                                <tbody>
+                                {% for room in object_list %}
+                                    <tr onclick="location.href='{{ room.object.get_absolute_url }}'">
+                                        <td width="50">{% thumbnail '50x50' room.logo %}</td>
+                                        <td>
+                                            <div class="name-chat">
+                                                <b>{{ room.name }}</b>
+                                            </div>
+                                            <div class="last-message {% if room.object.messages.last.author.id != user.id %}{% if user not in room.object.messages.last.read.all %}no-read{% endif %}{% else %}{% if room.object.messages.last.read.all.count < 2 %}no-read{% endif %}{% endif %}">
+                                                {% thumbnail '25x25' room.object.messages.last.author.settings.avatar %}
+                                                <span class="message">{{ room.object.messages.last.text }}</span>
+                                            </div>
+                                        </td>
+                                        <td style="text-align: right" width="100">{{ room.object.messages.last.datetime|date:'H:i' }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <hr>
+                        <p style="font-size: 14px">У вас нет бесед. Найдите друзей, воспользовавшись поиском в верхней части сайта, добавьте их в
+                        список друзей и напишите им сообщение, нажав на их странице кнопку "Написать сообщение".</p>
+                    {% endif %}
                 {% endblock %}
             </div>
         </div>

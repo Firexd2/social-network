@@ -37,7 +37,7 @@ $(document).ready(function () {
                     if (result_html) {
                         $('#results-container').html(result_html);
                     } else {
-                        $('#results-container').html('Ничего не нашлось');
+                        $('#results-container').html('<p>Ничего не нашлось</p>');
                     }
                 })
             }, 500)

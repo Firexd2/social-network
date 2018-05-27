@@ -13,7 +13,7 @@
 </head>
 <nav class="navbar navbar-light bg-faded">
     <div class="container">
-        <a class="navbar-brand" href="/"><b>SN</b></a>
+        <a class="navbar-brand" href="/"><b>Social Network</b></a>
         {% if user.is_authenticated %}
             <div class="hidden-sm-down">
                 <ul class="nav navbar-nav">
@@ -42,7 +42,9 @@
                         <table class="table table-sm">
                             <tbody id="results-container">
                             <tr>
-                                <td>Идет загрузка...</td>
+                                <td>
+                                    <p style="margin-top: 5px">Идет загрузка...</p>
+                                </td>
                             </tr>
                             </tbody>
                         </table>

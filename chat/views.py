@@ -1,25 +1,27 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.views.generic import ListView, DetailView, TemplateView
 from base.mixins import UserMixin, ActionMixin, MultiFormMixin
 from chat.models import Room, Message
 from user.models import User
 from django.db.models import Q, F
 
-from chat.forms import NewRoomForm, EditRoomLogoForm, EditRoomNameForm
+from django.shortcuts import Http404
+
+from chat.forms import NewRoomForm, EditRoomLogoForm, EditRoomNameForm, OutRoomForm
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def get_data(i, room):
 
-    if room.users.count() > 2:
+    if room.type == 'conversation':
 
         name = room.name
         logo = room.logo
-        info = str(room.users.count()) + ' участника'
+        info = str(room.settings_user.count()) + ' участника'
 
     else:
-        other_user = [user for user in room.users.all() if user != i][0]
+        other_user = [settings.user for settings in room.settings_user.all() if settings.user != i][0]
 
         name = other_user.get_full_name()
         logo = other_user.settings.avatar
@@ -45,10 +47,22 @@ class RoomsListView(LoginRequiredMixin, ActionMixin, ListView):
 
     @staticmethod
     def get_dialog(addressee, destination):
-        rooms = addressee.settings.rooms.filter(users=destination)
-        for room in rooms:
-            if room.users.count() == 2:
-                return room
+
+        room = Room.objects.filter(Q(settings_user__user=addressee) and
+                                   Q(settings_user__user=destination),
+                                   type='dialog')
+        return room[0]
+
+        # # rooms = addressee.settings.rooms.all()
+        # # for room in rooms:
+        # #     for settings in room.settings_user.all():
+        # #         if settings.user == destination and room.type == 'dialog':
+        # #             return room
+        #
+        # rooms = addressee.settings.rooms.all()
+        # for room in rooms:
+        #     if room.settings_user.filter(user=destination) and room.type == 'dialog':
+        #         return room
 
     def action_new_message(self):
 
@@ -72,7 +86,6 @@ class RoomsListView(LoginRequiredMixin, ActionMixin, ListView):
 
                 room = Room()
                 room.save()
-                room.users.add(addressee, destination)
 
                 addressee.settings.rooms.add(room)
                 destination.settings.rooms.add(room)
@@ -91,7 +104,21 @@ class RoomDetailView(LoginRequiredMixin, MultiFormMixin, DetailView):
     template_name = 'chat/chat.html'
     model = Room
 
-    form_classes = {'edit_logo': EditRoomLogoForm, 'edit_name': EditRoomNameForm}
+    form_classes = {'edit_logo': EditRoomLogoForm,
+                    'edit_name': EditRoomNameForm,
+                    'out_room': OutRoomForm}
+
+    form_success_urls = {'out_room': '/rooms/'}
+
+    def valid_form_out_room(self, **kwargs):
+        form = kwargs['form']
+
+        room_id = form.cleaned_data['id']
+        room = Room.objects.get(id=room_id)
+
+        self.request.user.settings.rooms.remove(room)
+
+        return super().redirect_to_success_url(**kwargs)
 
     def get_instance_form_edit_name(self, **kwargs):
         return self.get_object()['object']
@@ -111,6 +138,13 @@ class RoomDetailView(LoginRequiredMixin, MultiFormMixin, DetailView):
 
         for message in no_read_messages:
             message.read.add(user)
+
+    def dispatch(self, request, *args, **kwargs):
+
+        if not self.request.user.settings.rooms.filter(id=kwargs['pk']):
+            raise Http404()
+
+        return super().dispatch(request, *args, **kwargs)
 
 
 class NewRoomView(LoginRequiredMixin, MultiFormMixin, TemplateView):
@@ -140,8 +174,7 @@ class NewRoomView(LoginRequiredMixin, MultiFormMixin, TemplateView):
         for u in users:
             u.settings.rooms.add(room)
 
-        # добавляем сообщение и участников в беседу
-        room.users.add(*users)
+        # добавляем приветственное сообщение в беседу
         room.messages.add(message)
 
         return self.redirect_to_success_url(**kwargs)

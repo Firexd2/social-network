@@ -77,7 +77,7 @@
             <div class="details block">
                 <div>
                     <h5 style="float: left; margin-bottom: 3px">{{ current_user.get_full_name }}</h5>
-                    <span style="float: right">{{ current_user.get_last_online }}</span>
+                    <span style="float: right">{% if current_user == user %}online{% else %}{{ current_user.get_last_online }}{% endif %}</span>
                     <div style="clear: left"></div>
                     {% if user == current_user %}
                         <div class="status">
@@ -136,10 +136,8 @@
                 </div>
             </div>
             <div class="photos min-block">
-                <div class="header-block">
+                <div onclick="location.href='{{ current_user.get_albums_page_url }}'" class="header-block">
                     <h6>Фотографии пользователя</h6> <span class="count">{{ last_photos.count }}</span>
-                    <a href="{{ current_user.get_albums_page_url }}">Показать все</a>
-                    <div style="clear: left"></div>
                 </div>
                 <hr>
                 {% if last_photos %}

@@ -14,9 +14,12 @@ class Room(models.Model):
     name = models.CharField('Название беседы', max_length=20, null=True)
     logo = models.ImageField('Фотография беседы', upload_to=directory_path_photo, default='no-image.gif/')
 
+    # dialog or conversation
+    type = models.CharField('Тип комнаты', max_length=12, default='dialog')
+
     messages = models.ManyToManyField(Message)
 
-    users = models.ManyToManyField('user.User')
+    # users = models.ManyToManyField('user.User')
 
     # def get_other_user(self, user):
     #     users = self.users.all()

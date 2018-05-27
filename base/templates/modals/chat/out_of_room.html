@@ -1,0 +1,9 @@
+{% extends 'modals/base.html' %}
+{% block class %}out-of-room{% endblock %}
+{% block name %}Подтверждение на выход из беседы{% endblock %}
+{% block form_name %}out-of-room{% endblock %}
+{% block form %}
+    <input hidden name="id" value="{{ object.object.id }}" type="text">
+    <p>Вы точно хотите выйти из беседы "<b>{{ object.name }}</b>"?</p>
+{% endblock %}
+{% block name_btn %}Выйти{% endblock %}
