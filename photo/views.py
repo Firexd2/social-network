@@ -7,7 +7,7 @@ from photo.forms import AlbumForm, NewPhotoForm, CoverAlbumForm, DeleteAlbumForm
 from photo.models import PhotoAlbum, Photo
 
 
-class ListAlbumView(ListView, UserMixin, FormMixin):
+class ListAlbumView(UserMixin, FormMixin, ListView):
     model = PhotoAlbum
     template_name = 'photo/albums.html'
     form_class = AlbumForm
@@ -31,7 +31,7 @@ class ListAlbumView(ListView, UserMixin, FormMixin):
         return context
 
 
-class DetailAlbumView(DetailView, UserMixin, MultiFormMixin):
+class DetailAlbumView(UserMixin, MultiFormMixin, DetailView):
     model = PhotoAlbum
     template_name = 'photo/album.html'
 

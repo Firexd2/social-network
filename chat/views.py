@@ -5,7 +5,7 @@ from chat.models import Room, Message
 from user.models import User
 from django.db.models import Q, F
 
-from chat.forms import NewRoomForm
+from chat.forms import NewRoomForm, EditRoomLogoForm, EditRoomNameForm
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -28,7 +28,7 @@ def get_data(i, room):
     return {'name': name, 'logo': logo, 'info': info, 'object': room}
 
 
-class RoomsListView(ListView, LoginRequiredMixin, ActionMixin):
+class RoomsListView(LoginRequiredMixin, ActionMixin, ListView):
 
     template_name = 'chat/base.html'
 
@@ -87,9 +87,17 @@ class RoomsListView(ListView, LoginRequiredMixin, ActionMixin):
         return redirect(self.request.get_full_path())
 
 
-class RoomDetailView(DetailView, LoginRequiredMixin, ActionMixin):
+class RoomDetailView(LoginRequiredMixin, MultiFormMixin, DetailView):
     template_name = 'chat/chat.html'
     model = Room
+
+    form_classes = {'edit_logo': EditRoomLogoForm, 'edit_name': EditRoomNameForm}
+
+    def get_instance_form_edit_name(self, **kwargs):
+        return self.get_object()['object']
+
+    def get_instance_form_edit_logo(self, **kwargs):
+        return self.get_object()['object']
 
     def get_object(self, queryset=None):
         room = get_data(self.request.user, super(RoomDetailView, self).get_object())
@@ -105,7 +113,7 @@ class RoomDetailView(DetailView, LoginRequiredMixin, ActionMixin):
             message.read.add(user)
 
 
-class NewRoomView(TemplateView, LoginRequiredMixin, MultiFormMixin):
+class NewRoomView(LoginRequiredMixin, MultiFormMixin, TemplateView):
     template_name = 'chat/new_room.html'
 
     form_classes = {'new_room': NewRoomForm}

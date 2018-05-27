@@ -1,6 +1,7 @@
 {% extends 'modals/base.html' %}
 {% block class %}new-message{% endblock %}
 {% block name %}Новое сообщение{% endblock %}
+{% block form_name %}new-message{% endblock %}
 {% block action %}{% url 'rooms' %}{% endblock %}
 {% block form %}
     <input hidden value="{{ current_user.id }}" name="destination" type="text">

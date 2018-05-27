@@ -10,7 +10,8 @@ from .manager import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True,
+                              help_text='После регистрации на указанный e-mail будет выслано письмо активации')
 
     first_name = models.CharField('Имя', max_length=15)
     last_name = models.CharField('Фамилия', max_length=15)

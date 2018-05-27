@@ -1,6 +1,5 @@
 {% extends 'base/base.html' %}
 {% load staticfiles %}
-{% load widget_tweaks %}
 {% block static %}
     <link rel="stylesheet" href="{% static 'photo/styles.css' %}">
 {% endblock %}
@@ -13,7 +12,7 @@
                     <b>{{ current_user.first_name }}</b>
                     <span class="count">{{ object_list.count }}</span></h6>
                 {% if current_user == user %}
-                    <a href="" style="float: right" data-toggle="modal" data-target=".bd-example-modal-md">Создать альбом</a>
+                    <a href="" style="float: right" data-toggle="modal" data-target=".new-album">Создать альбом</a>
                 {% endif %}
                 <div style="clear: left"></div>
                 <hr>
@@ -45,25 +44,5 @@
             </div>
         </div>
     </div>
-    <div class="modal fade bd-example-modal-md" id="modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <h5>Новый альбом</h5>
-                <hr>
-                <form method="POST"> {% csrf_token %}
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1"><i class="fas fa-camera-retro"></i></span>
-                        {{ form.name|attr:'placeholder:Название альбома'|attr:'class:form-control' }}
-                    </div>
-                    <div>
-                        {{ form.description|attr:'class:form-control'|attr:'placeholder:Описание' }}
-                    </div>
-                    <div>
-                        <button class="btn btn-outline-success">Готово</button>
-                        <button type="button" onclick="$('#modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    {% include 'modals/photo/new_album.html' %}
 {% endblock %}

@@ -23,9 +23,10 @@
                             <div class="dropdown">
                                 <i class="fas fa-ellipsis-h fa-2x"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    <a class="dropdown-item" href="" data-toggle="modal" data-target=".edit-room-logo">Обновить фото беседы</a>
+                                    <a class="dropdown-item" href="" data-toggle="modal" data-target=".edit-room-name">Редактировать название</a>
+                                    <a class="dropdown-item" href="" data-toggle="modal" data-target=".view-all-users">Посмотреть всех участников</a>
+                                    <a class="dropdown-item" href="" >Выйти из беседы</a>
                                 </div>
                             </div>
                         </td>
@@ -88,6 +89,9 @@
         {#            </div>#}
         {#        </div>#}
     </div>
+    {% include 'modals/chat/edit_room_logo.html' %}
+    {% include 'modals/chat/edit_room_name.html' %}
+    {% include 'modals/chat/view_all_users.html' %}
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'chat/scripts.js' %}"></script>

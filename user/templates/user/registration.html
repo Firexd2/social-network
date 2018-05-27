@@ -1,5 +1,8 @@
 {% extends 'base/base.html' %}
-{% load widget_tweaks %}
+{% load staticfiles %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'user/styles.css' %}">
+{% endblock %}
 {% block container %}
     <div class="row">
         <div class="col-lg-6 offset-md-3">
@@ -15,32 +18,32 @@
                             {{ form.email.errors }}
                         </div>
                     {% else %}
-                        <div style="padding: 8px 10px 10px 10px" class="alert alert-info" role="alert">
+                        <div class="alert alert-info" role="alert">
                             После регистрации на указанный e-mail будет выслано письмо активации
                         </div>
                     {% endif %}
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1"><i class="fas fa-at"></i></span>
-                        {{ form.email|attr:'placeholder:E-mail'|attr:'class:form-control' }}
+                        {{ form.email }}
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1"><i class="fas fa-user"></i></span>
-                        {{ form.first_name|attr:'placeholder:Имя'|attr:'class:form-control' }}
+                        {{ form.first_name }}
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1"><i class="fas fa-user"></i></span>
-                        {{ form.last_name|attr:'placeholder:Фамилия'|attr:'class:form-control' }}
+                        {{ form.last_name }}
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1"><i class="fas fa-mars"></i></span>
-                        {{ form.sex|attr:'class:form-control' }}
+                        {{ form.sex }}
                     </div>
                     <div class="alert alert-warning" role="alert">
                         {{ form.password1.help_text|safe }}
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1"><i class="fas fa-key"></i></span>
-                        {{ form.password1|attr:'placeholder:Пароль'|attr:'class:form-control' }}
+                        {{ form.password1 }}
                     </div>
                     {% if form.password2.errors %}
                         <div class="alert alert-danger" role="alert">
@@ -49,7 +52,7 @@
                     {% endif %}
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon1"><i class="fas fa-key"></i></span>
-                        {{ form.password2|attr:'placeholder:Еще раз пароль'|attr:'class:form-control' }}
+                        {{ form.password2 }}
                     </div>
                     <button class="btn btn btn-outline-success">Зарегестрироваться</button>
                 </form>

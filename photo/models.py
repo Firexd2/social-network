@@ -8,7 +8,7 @@ def directory_path_photo(instance, filename):
 
 
 class PhotoAlbum(models.Model):
-    name = models.CharField('Имя', max_length=20)
+    name = models.CharField('Название альбома', max_length=20)
     description = models.TextField('Описание', blank=True, null=True)
     cover = models.CharField('Обложка', max_length=200, default=settings.NO_IMAGE)
     photos = models.ManyToManyField('Photo', related_name='album', blank=True)
@@ -29,5 +29,3 @@ class Photo(models.Model):
     datetime = models.DateTimeField(auto_now_add=True)
     # name = models.CharField(max_length=100, null=True, blank=True)
     # description = models.TextField(blank=True, null=True)
-
-

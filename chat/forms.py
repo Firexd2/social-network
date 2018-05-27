@@ -13,3 +13,19 @@ class NewRoomForm(forms.ModelForm):
         model = Room
         fields = ['name', 'ids_users', 'first_message']
         widgets = {'name': forms.TextInput(attrs={'class': 'form-control'})}
+
+
+class EditRoomLogoForm(forms.ModelForm):
+
+    class Meta:
+        model = Room
+        fields = ['logo']
+        widgets = {'logo': forms.FileInput(attrs={'class': 'form-control'})}
+
+
+class EditRoomNameForm(forms.ModelForm):
+
+    class Meta:
+        model = Room
+        fields = ['name']
+        widgets = {'name': forms.TextInput(attrs={'class': 'form-control'})}

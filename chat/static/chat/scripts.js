@@ -81,7 +81,7 @@ $(document).ready(function () {
         }
     });
 
-    $('form[name="new-message"]').on('submit', function (e) {
+    $('form[name=new-message]').on('submit', function (e) {
         e.preventDefault();
 
         const to_redirect = '/rooms/';
@@ -102,7 +102,6 @@ $(document).ready(function () {
         for (let i=0;i<friends_selected.length;i++) {
             ids += friends_selected.eq(i).attr('id') + ','
         }
-
         data[2].value = ids.slice(0, -1);
 
         $.post('', data, function () {

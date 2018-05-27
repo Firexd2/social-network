@@ -12,7 +12,7 @@ class Message(models.Model):
 
 class Room(models.Model):
     name = models.CharField('Название беседы', max_length=20, null=True)
-    logo = models.ImageField('Лого', upload_to=directory_path_photo, default='no-image.gif/')
+    logo = models.ImageField('Фотография беседы', upload_to=directory_path_photo, default='no-image.gif/')
 
     messages = models.ManyToManyField(Message)
 

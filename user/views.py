@@ -32,7 +32,7 @@ class RegisterFormView(FormView):
         return HttpResponseRedirect('/')
 
 
-class SettingsPageView(TemplateView, LoginRequiredMixin, MultiFormMixin):
+class SettingsPageView(LoginRequiredMixin, MultiFormMixin, TemplateView):
     template_name = 'user/settings.html'
 
     form_classes = {'settings': EditSettingsForm}

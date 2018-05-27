@@ -1,0 +1,21 @@
+{% extends 'modals/base.html' %}
+{% load imagekit %}
+{% block class %}view-all-users{% endblock %}
+{% block name %}Все пользователи в беседе <b>"{{ object.name }}"</b>{% endblock %}
+{% block content_modal %}
+    <table class="table table-sm all-users-room">
+        <tbody>
+        {% for user in object.object.users.all %}
+            <tr>
+                <td width="40">{% thumbnail '40x40' user.settings.avatar %}</td>
+                <td style="vertical-align: middle">
+                    {{ user.get_full_name }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div style="margin-top: 15px">
+        <button type="button" onclick="$('.modal').modal('hide')" class="btn btn-outline-info">Выйти</button>
+    </div>
+{% endblock %}

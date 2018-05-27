@@ -1,6 +1,5 @@
 {% extends 'base/base.html' %}
 {% load staticfiles %}
-{% load widget_tweaks %}
 {% block static %}
     <link rel="stylesheet" href="{% static 'photo/styles.css' %}">
 {% endblock %}
@@ -46,8 +45,8 @@
             </div>
         </div>
     </div>
-    {% include 'modals/new_photo.html' %}
-    {% include 'modals/edit_album.html' %}
+    {% include 'modals/photo/new_photo.html' %}
+    {% include 'modals/photo/edit_album.html' %}
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'photo/scripts.js' %}"></script>

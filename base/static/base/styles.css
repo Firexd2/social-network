@@ -30,6 +30,10 @@ input, button, select, textarea, .input-group-addon, .alert {
     border-radius: 0 !important;
 }
 
+.modal-content, .dropdown-menu {
+    border-radius: 0;
+}
+
 .table {
     margin-bottom: 0 !important;
 }
@@ -42,7 +46,7 @@ input, button, select, textarea, .input-group-addon, .alert {
     margin-top: 4px;
 }
 
-.btn, .input-group input, .input-group span, input, select {
+.btn, .input-group input, .input-group span, input, select, textarea {
     font-size: 13px !important;
     padding: 5px 8px 5px 8px !important;
 }

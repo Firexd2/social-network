@@ -5,12 +5,12 @@ from base.mixins import ActionMixin, UserMixin
 from user.models import User
 
 
-class FriendsListView(TemplateView, UserMixin, ActionMixin):
+class FriendsListView(UserMixin, ActionMixin, TemplateView):
 
     template_name = field = title = ''
 
     def get_context_data(self, *args, **kwargs):
-        context = super(TemplateView, self).get_context_data(**kwargs)
+        context = super(FriendsListView, self).get_context_data(**kwargs)
         context['list'] = eval('self.get_user.settings.' + self.field + '.all()')
         context['title'] = self.title
 

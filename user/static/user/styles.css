@@ -10,3 +10,15 @@ form[name=settings] label {
     font-size: 13px;
     color: #9c9c9c;
 }
+
+.alert-info, .alert-warning {
+    padding: 10px 15px 10px 15px !important;
+}
+
+.input-group-addon {
+    width: 30px;
+}
+
+.input-group {
+    margin-bottom: 5px !important;
+}

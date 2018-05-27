@@ -7,7 +7,7 @@ class AlbumForm(forms.ModelForm):
         model = PhotoAlbum
         fields = ['name', 'description']
         widgets = {'name': forms.TextInput(attrs={'class': 'form-control'}),
-                   'description': forms.Textarea(attrs={'class': 'form-control'})
+                   'description': forms.Textarea(attrs={'class': 'form-control', 'rows': '1'})
                    }
 
 

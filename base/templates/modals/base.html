@@ -1,8 +1,9 @@
 <div class="modal fade {% block class %}{% endblock %}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
-            {% block name %}{% endblock %}
+            <h5>{% block name %}{% endblock %}</h5>
             <hr>
+            {% block content_modal %}
             <form name="{% block form_name %}{% endblock %}" action="{% block action %}{% endblock %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% block form %}{% endblock %}
@@ -11,6 +12,7 @@
                     <button type="button" onclick="$('.modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
                 </div>
             </form>
+            {% endblock %}
         </div>
     </div>
 </div>

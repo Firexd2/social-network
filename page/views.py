@@ -18,7 +18,7 @@ class RedirectToMyPageView(LoginRequiredMixin, RedirectView):
         return reverse(self.pattern_name, kwargs={'id': id})
 
 
-class PageView(TemplateView, UserMixin, MultiFormMixin):
+class PageView(UserMixin, MultiFormMixin, TemplateView):
     template_name = 'page/index.html'
 
     form_classes = {'new_avatar': NewAvatarForm,
@@ -63,7 +63,7 @@ class PageView(TemplateView, UserMixin, MultiFormMixin):
         return self.redirect_to_success_url(**kwargs)
 
     def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(PageView, self).get_context_data(**kwargs)
         context['last_photos'] = self.get_last_photos
         context['friends'] = self.get_user.settings.friends.all()
         context['online_friends'] = list(filter(lambda x: x.get_last_online == 'online', context['friends']))
