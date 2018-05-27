@@ -1,0 +1,16 @@
+<div class="modal fade {% block class %}{% endblock %}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            {% block name %}{% endblock %}
+            <hr>
+            <form name="{% block form_name %}{% endblock %}" action="{% block action %}{% endblock %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% block form %}{% endblock %}
+                <div style="margin-top: 15px">
+                    <button class="btn btn-outline-success">{% block name_btn %}Окей{% endblock %}</button>
+                    <button type="button" onclick="$('.modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

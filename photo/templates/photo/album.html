@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block static %}
@@ -18,8 +18,8 @@
                 </h6>
                 <span style="float: right">
                     {% if current_user == user %}
-                        <a href="" data-toggle="modal" data-target=".bd-example-modal-md">Добавить фотографии</a> |
-                        <a href=""  data-toggle="modal" data-target=".bd-example-modal-md-edit">Редактировать</a> |
+                        <a href="" data-toggle="modal" data-target=".new-photo">Добавить фотографии</a> |
+                        <a href=""  data-toggle="modal" data-target=".edit-album">Редактировать</a> |
                         <a id="back" href="{{ object.get_previous_url }}">Назад</a>
                     {% endif %}
                  </span>
@@ -46,36 +46,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade bd-example-modal-md" tabindex="-1" id="modal" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                Добавить новую фотографию
-                <hr>
-                <form method="POST" enctype="multipart/form-data">{% csrf_token %}
-                    {{ form_new_photo.as_p }}
-                    <div>
-                        <button class="btn btn-outline-success">Готово</button>
-                        <button type="button" onclick="$('#modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade bd-example-modal-md-edit" tabindex="-1" id="edit-modal" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                Редактирование альбома
-                <hr>
-                <form method="POST" name="edit-album"> {% csrf_token %}
-                    {{ form_album.as_p }}
-                    <div>
-                        <button class="btn btn-outline-success">Готово</button>
-                        <button type="button" onclick="$('#edit-modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    {% include 'modals/new_photo.html' %}
+    {% include 'modals/edit_album.html' %}
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'photo/scripts.js' %}"></script>

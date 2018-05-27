@@ -19,7 +19,7 @@ class RedirectToMyPageView(LoginRequiredMixin, RedirectView):
 
 
 class PageView(TemplateView, UserMixin, MultiFormMixin):
-    template_name = 'page.html'
+    template_name = 'page/index.html'
 
     form_classes = {'new_avatar': NewAvatarForm,
                     'new_writting_wall': NewWrittingWalForm,

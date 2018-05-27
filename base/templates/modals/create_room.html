@@ -1,16 +1,5 @@
-<div class="modal fade create-room" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            Создание новой беседы
-            <hr>
-            <form name="create-room" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form_new_room.as_p }}
-                <div style="margin-top: 15px">
-                    <button class="btn btn-outline-success">Создать</button>
-                    <button type="button" onclick="$('.modal').modal('hide')" class="btn btn-outline-danger">Отмена</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+{% extends 'modals/base.html' %}
+{% block class %}create-room{% endblock %}
+{% block name %}Создание новой формы{% endblock %}
+{% block form %}{{ form_new_room.as_p }}{% endblock %}
+{% block name_btn %}Создать{% endblock %}

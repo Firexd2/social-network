@@ -1,4 +1,4 @@
-{% extends 'base_friends.html' %}
+{% extends 'friends/base.html' %}
 {% block buttons %}
     <form method="POST">{% csrf_token %}
         <input name="action-add-friend" value="{{ friend.id }}" type="text" hidden>

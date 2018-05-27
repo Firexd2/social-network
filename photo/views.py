@@ -9,7 +9,7 @@ from photo.models import PhotoAlbum, Photo
 
 class ListAlbumView(ListView, UserMixin, FormMixin):
     model = PhotoAlbum
-    template_name = 'albums.html'
+    template_name = 'photo/albums.html'
     form_class = AlbumForm
 
     def post(self, *args, **kwargs):
@@ -33,7 +33,7 @@ class ListAlbumView(ListView, UserMixin, FormMixin):
 
 class DetailAlbumView(DetailView, UserMixin, MultiFormMixin):
     model = PhotoAlbum
-    template_name = 'album.html'
+    template_name = 'photo/album.html'
 
     form_classes = {'new_photo': NewPhotoForm,
                     'album': AlbumForm,

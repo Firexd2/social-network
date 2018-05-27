@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class LoginFormView(auth.LoginView):
-    template_name = 'auth.html'
+    template_name = 'user/auth.html'
     redirect_authenticated_user = True
     form_class = CustomAuthenticationForm
 
@@ -19,7 +19,7 @@ class LoginFormView(auth.LoginView):
 class RegisterFormView(FormView):
     form_class = RegisterForm
     success_url = "/auth/"
-    template_name = "registration.html"
+    template_name = "user/registration.html"
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -33,7 +33,7 @@ class RegisterFormView(FormView):
 
 
 class SettingsPageView(TemplateView, LoginRequiredMixin, MultiFormMixin):
-    template_name = 'settings.html'
+    template_name = 'user/settings.html'
 
     form_classes = {'settings': EditSettingsForm}
 

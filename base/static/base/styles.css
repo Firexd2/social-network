@@ -1,5 +1,5 @@
 body {
-    background-color: rgba(252, 218, 241, 0.07);
+    background-color: #ededed;;
 }
 
 ::-webkit-scrollbar-button {
@@ -83,9 +83,12 @@ form label {
     padding: 20px 50px 20px 50px !important;
 }
 
+.block-menu, .block, .min-block {
+    box-shadow: 0 .005em .01em 0 rgba(0,0,0,.12),0 2px 10px 0 rgba(0,0,0,.12);
+}
+
 .block, .min-block {
     background-color: white;
-    box-shadow: 0 0 1px black;
     margin: 12px 0 12px 0;
     padding: 20px 20px 20px 20px;
 }
@@ -176,7 +179,6 @@ form[name=auth] button {
 
 .block-menu {
     background-color: white;
-    box-shadow: 0 0 1px black;
     margin: 12px 0 12px 0;
     padding: 10px 0 10px 0;
 }
