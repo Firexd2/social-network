@@ -22,7 +22,7 @@
                             <table class="table table-sm table-chat">
                                 <tbody>
                                 {% for room in object_list %}
-                                    <tr onclick="location.href='{{ room.object.get_absolute_url }}'">
+                                    <tr class="{% if user not in room.object.messages.last.read.all %}no-read{% endif %}" onclick="location.href='{{ room.object.get_absolute_url }}'">
                                         <td width="50">{% thumbnail '50x50' room.logo %}</td>
                                         <td>
                                             <div class="name-chat">

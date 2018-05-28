@@ -2,7 +2,7 @@ body {
     background-color: #ededed;;
 }
 
-a {
+a, .btn-outline-info {
     color: #356f98;
 }
 
@@ -11,9 +11,22 @@ a {
     border-radius: 0 !important;
 }
 
+.btn-outline-info {
+    border-color: #356f98;
+}
+
+.btn-outline-info:hover {
+    background: #356f98;
+    border-color: #356f98;
+}
+
 .bg-faded .input-group-addon, .bg-faded input, .bg-faded input:focus  {
     border: none;
     background: white;
+}
+
+.navbar-nav .nav-item {
+    float: right;
 }
 
 .nav-stacked i {
@@ -22,6 +35,13 @@ a {
 
 .navbar-brand {
     color: white !important;
+}
+
+.counter-in-menu {
+    background: #e0e2e3;
+    padding: 2px 4px 2px 4px;
+    font-weight: bold;
+
 }
 
 ::-webkit-scrollbar-button {
@@ -88,6 +108,14 @@ form div {
 
 form label {
     font-size: 13px
+}
+
+.navbar-nav {
+    font-size: 15px;
+}
+
+.navbar-nav a {
+    color: white !important;
 }
 
 .border, .border div {

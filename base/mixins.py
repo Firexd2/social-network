@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, Http404
 from django.views.generic.base import ContextMixin
-
+from django.db.models import Q
 from user.models import User
 
 

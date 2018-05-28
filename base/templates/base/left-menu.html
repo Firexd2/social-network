@@ -1,8 +1,21 @@
 <div style="padding-top: 10px" class="row">
     <nav class="nav nav-pills nav-stacked">
         <a class="nav-link" href="{{ user.get_absolute_url }}"><i class="fas fa-home"></i> Моя страница</a>
-        <a class="nav-link" href="{% url 'rooms' %}"><i class="fas fa-envelope"></i> Сообщения</a>
-        <a class="nav-link" href="{{ user.get_friends_page_url }}"><i class="fas fa-users"></i> Друзья</a>
+
+        <a class="nav-link" href="{% url 'rooms' %}"><i class="fas fa-envelope"></i>
+            Сообщения
+            {% if unread_rooms %}
+                <span class="counter-in-menu">+{{ unread_rooms }}</span>
+            {% endif %}
+        </a>
+
+        <a class="nav-link" href="{{ user.get_friends_page_url }}"><i class="fas fa-users"></i>
+            Друзья
+            {% if new_friends %}
+                <span class="counter-in-menu">+{{ new_friends }}</span>
+            {% endif %}
+        </a>
+
         <a class="nav-link" href="{{ user.get_albums_page_url }}"><i class="fas fa-images"></i> Фотографии</a>
         <a class="nav-link" href="{% url 'settings' %}"><i class="fas fa-cog"></i> Настройки</a>
     </nav>

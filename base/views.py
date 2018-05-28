@@ -57,12 +57,12 @@ from user.models import User
 @csrf_exempt
 def general_search(request):
     users = User.objects.all()
-    request = request.POST['request']
+    request = request.POST['request'].lower()
 
     response = dict()
 
     for user in users:
-        if request in user.last_name or request in user.first_name:
+        if request in user.last_name.lower() or request in user.first_name.lower():
             response[user.get_full_name()] = {'url': user.get_absolute_url(),
                                               'avatar': user.settings.avatar_thumbnail.url}
 
