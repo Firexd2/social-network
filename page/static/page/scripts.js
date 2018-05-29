@@ -17,6 +17,13 @@ $(document).ready(function () {
     $('.status').on('click', function () {
         $(this).hide();
         $('input[name=status]').show().focus()
-    })
+    });
+
+    const alerts = new WebSocket('ws://' + '127.0.0.1:8888' + '/pages_alerts/' + $('user').text() + '/');
+
+    alerts.onmessage = function (ev) {
+        alert('У ВАС НОВОЕ СООБЩЕНИЕ!')
+    }
+
 
 });

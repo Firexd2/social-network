@@ -2,6 +2,9 @@ if (document.querySelector(".chat-log")) {document.querySelector(".chat-log").sc
 
 $(document).ready(function () {
 
+        const send_messages_socket = new WebSocket('ws://' + '127.0.0.1:8888' + '/send_message/');
+
+
     $(function () {
         $('textarea[name=action-new-message]').keypress(function (e) {
             if (e.which === 13) {
@@ -12,6 +15,10 @@ $(document).ready(function () {
                 $('form[name=message]').submit();
             }
         });
+    });
+
+    $('form[name=message]').on('submit', function () {
+        send_messages_socket.send('1')
     });
 
     $(function () {
@@ -64,6 +71,7 @@ $(document).ready(function () {
             count_span.text(0)
         }
     }
+
 
     $('input[name=search-friend]').on('input', function () {
         const val = $(this).val().toLowerCase();
