@@ -64,7 +64,7 @@
                 <table class="table table-sm table-footer-chat">
                     <tbody>
                     <tr>
-                        <form action="{% url 'rooms' %}" name="message" method="POST">
+                        <form action="{% url 'send-message' %}" name="message" method="POST">
                             <td>
                                 {% csrf_token %}
                                 <textarea name="action-new-message" placeholder="Напишите сообщение..." class="form-control" cols="50" rows="1"></textarea>

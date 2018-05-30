@@ -34,6 +34,7 @@ urlpatterns = [
     path('room/<str:pk>/', chat_views.RoomDetailView.as_view(), name='room'),
     path('new-room/', chat_views.NewRoomView.as_view(), name='new-room'),
     path('rooms/', chat_views.RoomsListView.as_view(), name='rooms'),
+    path('send_message/', chat_views.SendMessageView.as_view(), name='send-message'),
     path('settings/', user_views.SettingsPageView.as_view(), name='settings'),
     path('<str:id>/', views.PageView.as_view(), name='page'),
     path('<str:id>/albums/', photo_views.ListAlbumView.as_view(), name='albums'),

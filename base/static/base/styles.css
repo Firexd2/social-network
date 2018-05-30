@@ -39,9 +39,27 @@ a, .btn-outline-info {
 
 .counter-in-menu {
     background: #e0e2e3;
-    padding: 2px 4px 2px 4px;
+    padding: 3px 6px 3px 6px;
     font-weight: bold;
 
+}
+
+.new-m {
+    display: none;
+    position: fixed;
+    padding: 10px;
+    bottom: 50px;
+    left: 50px;
+    color: white;
+    background: rgba(0, 0, 0, 0.68);
+}
+
+.new-m i {
+    color: #ffe800;
+}
+
+.new-m #name {
+    font-weight: bold;
 }
 
 ::-webkit-scrollbar-button {

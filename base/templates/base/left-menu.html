@@ -4,9 +4,10 @@
 
         <a class="nav-link" href="{% url 'rooms' %}"><i class="fas fa-envelope"></i>
             Сообщения
-            {% if unread_rooms %}
-                <span class="counter-in-menu">+{{ unread_rooms }}</span>
-            {% endif %}
+
+            <span id="count-messages" {% if not unread_rooms|length %}style="display: none"{% endif %} class="counter-in-menu">{% if unread_rooms %}{{ unread_rooms|length }}{% endif %}</span>
+
+            <div hidden id="list-rooms">{{ unread_rooms }}</div>
         </a>
 
         <a class="nav-link" href="{{ user.get_friends_page_url }}"><i class="fas fa-users"></i>

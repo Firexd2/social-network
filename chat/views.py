@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView, TemplateView, View
 from base.mixins import UserMixin, ActionMixin, MultiFormMixin
 from chat.models import Room, Message
 from user.models import User
@@ -10,6 +10,10 @@ from django.shortcuts import Http404
 from chat.forms import NewRoomForm, EditRoomLogoForm, EditRoomNameForm, OutRoomForm
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+import tornadoredis
+
+import json
 
 
 def get_data(i, room):
@@ -45,6 +49,14 @@ class RoomsListView(LoginRequiredMixin, ActionMixin, ListView):
 
         return sorted(data, key=lambda i: i['object'].messages.last().datetime, reverse=True)
 
+
+class SendMessageView(LoginRequiredMixin, ActionMixin, View):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.client = tornadoredis.Client()
+        self.client.connect()
+
     @staticmethod
     def get_dialog(addressee, destination):
 
@@ -53,16 +65,22 @@ class RoomsListView(LoginRequiredMixin, ActionMixin, ListView):
                                    type='dialog')
         return room[0]
 
-        # # rooms = addressee.settings.rooms.all()
-        # # for room in rooms:
-        # #     for settings in room.settings_user.all():
-        # #         if settings.user == destination and room.type == 'dialog':
-        # #             return room
-        #
-        # rooms = addressee.settings.rooms.all()
-        # for room in rooms:
-        #     if room.settings_user.filter(user=destination) and room.type == 'dialog':
-        #         return room
+    def send_alert_websocket(self, room, message):
+
+        # отправляем оповещения о новом сообщении всем участникам комнаты, кроме самого себя
+
+        notify = dict()
+
+        for user in User.objects.filter(settings__rooms=room):
+            if user != self.request.user:
+                notify[user.id] = {'addressee': self.request.user.get_full_name(),
+                                   'type': room.type,
+                                   'room_id': room.id,
+                                   'avatar': self.request.user.settings.avatar.url,
+                                   'datetime': str(message.datetime),
+                                   'text': message.text}
+
+        self.client.publish('alert', json.dumps(notify))
 
     def action_new_message(self):
 
@@ -92,12 +110,18 @@ class RoomsListView(LoginRequiredMixin, ActionMixin, ListView):
 
         # добавляем новое сообщение
 
-        message = Message(text=self.request.POST['action-new-message'], author=addressee)
+        text = self.request.POST['action-new-message']
+
+        message = Message(text=text, author=addressee)
         message.save()
         message.read.add(addressee)
         room.messages.add(message)
 
-        return redirect(self.request.get_full_path())
+        # отправляем оповещения о новом сообщении
+
+        self.send_alert_websocket(room, message)
+
+        return redirect('/rooms/')
 
 
 class RoomDetailView(LoginRequiredMixin, MultiFormMixin, DetailView):

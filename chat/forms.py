@@ -39,3 +39,14 @@ class OutRoomForm(forms.ModelForm):
     class Meta:
         model = Room
         fields = ['id']
+
+
+class SendMessageForm(forms.ModelForm):
+
+    id = forms.CharField()
+    destination = forms.CharField()
+
+    class Meta:
+        model = Message
+        fields = ['text', 'id', 'destination']
+

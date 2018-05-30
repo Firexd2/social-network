@@ -47,6 +47,7 @@
 </nav>
 <body>
 <div class="container">
+    <div id="id-user" hidden>{{ user.id }}</div>
     {% block container %}
         <div class="row">
             <div class="col-lg-2 left-menu">
@@ -64,6 +65,7 @@
         <a class="nav-link" href="#">Используемые технологии</a>
     </nav>
 </div>
+<div class="new-m"><i class="far fa-envelope"></i> Пользователь <span id="name"></span> прислал вам новое сообщение</div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="//code.jquery.com/jquery-3.1.0.js"></script>

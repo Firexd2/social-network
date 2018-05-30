@@ -2,7 +2,7 @@
 {% block class %}new-message{% endblock %}
 {% block name %}Новое сообщение{% endblock %}
 {% block form_name %}new-message{% endblock %}
-{% block action %}{% url 'rooms' %}{% endblock %}
+{% block action %}{% url 'send-message' %}{% endblock %}
 {% block form %}
     <input hidden value="{{ current_user.id }}" name="destination" type="text">
     <textarea name="action-new-message" placeholder="Сообщение" class="form-control" cols="52" rows="1"></textarea>

@@ -1,9 +1,9 @@
-def get_number_of_unread_rooms(user):
+def get_list_of_unread_rooms(user):
     rooms = user.settings.rooms.all()
-    unread_rooms = 0
+    unread_rooms = []
     for room in rooms:
         if user not in room.messages.last().read.all():
-            unread_rooms += 1
+            unread_rooms.append(room.id)
 
     return unread_rooms
 
@@ -19,5 +19,5 @@ def information(request):
 
     user = request.user
 
-    return {'unread_rooms': get_number_of_unread_rooms(user),
+    return {'unread_rooms': get_list_of_unread_rooms(user),
             'new_friends': get_number_of_new_friends(user)}

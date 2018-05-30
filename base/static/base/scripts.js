@@ -58,5 +58,30 @@ $(document).ready(function () {
         }
     });
 
+    const alerts = new WebSocket('ws://' + '127.0.0.1:8888' + '/pages_alerts/' + $('#id-user').text() + '/');
+    const current_rooms_in_counter = $('#list-rooms').text().slice(1, -1).split(',');
+
+    alerts.onmessage = function (ev) {
+        const data = JSON.parse(ev.data);
+        let counter = $('#count-messages');
+        const prev_counter = counter.text() ? parseInt(counter.text()) : 0;
+
+        const alert = $('.new-m');
+        const name_in_alert = $('.new-m #name');
+
+        const id = String(data.room_id);
+
+        if (current_rooms_in_counter.indexOf(id) === -1) {
+            counter.show();
+            counter.text(prev_counter + 1);
+            current_rooms_in_counter.push(id);
+            if (data.type === 'dialog' && location.pathname !== '/rooms/') {
+                name_in_alert.text(data.addressee);
+                alert.show(300);
+                setTimeout(function () {alert.hide(300)}, 5000)
+            }
+        }
+    }
+
 
 });

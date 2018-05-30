@@ -4,6 +4,7 @@ from photo.models import Photo
 from page.models import WritingWall, SettingsUser
 
 
+
 class NewAvatarForm(forms.ModelForm):
 
     class Meta:

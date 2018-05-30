@@ -2,9 +2,6 @@ if (document.querySelector(".chat-log")) {document.querySelector(".chat-log").sc
 
 $(document).ready(function () {
 
-        const send_messages_socket = new WebSocket('ws://' + '127.0.0.1:8888' + '/send_message/');
-
-
     $(function () {
         $('textarea[name=action-new-message]').keypress(function (e) {
             if (e.which === 13) {
@@ -17,9 +14,6 @@ $(document).ready(function () {
         });
     });
 
-    $('form[name=message]').on('submit', function () {
-        send_messages_socket.send('1')
-    });
 
     $(function () {
         $('.chat').animate({height: $(window).height() - 300}, 100)
@@ -115,7 +109,15 @@ $(document).ready(function () {
         $.post('', data, function () {
             location.href='/rooms/'
         })
+    });
 
-    })
+    if (location.pathname === '/rooms/') {
+        const message_notifications = new WebSocket('ws://' + '127.0.0.1:8888' + '/pages_alerts/' + $('#id-user').text() + '/');
+
+        message_notifications.onmessage = function (ev) {
+            const data = JSON.parse(ev.data);
+            alert(data.addressee)
+        }
+    }
 
 });
