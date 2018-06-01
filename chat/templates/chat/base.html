@@ -20,9 +20,9 @@
                     {% if object_list %}
                         <div>
                             <table class="table table-sm table-chat">
-                                <tbody>
+                                <tbody id="container-rooms">
                                 {% for room in object_list %}
-                                    <tr class="{% if user not in room.object.messages.last.read.all %}no-read{% endif %}" onclick="location.href='{{ room.object.get_absolute_url }}'">
+                                    <tr id="{{ room.object.id }}" class="{% if user not in room.object.messages.last.read.all %}no-read{% endif %}" onclick="location.href='{{ room.object.get_absolute_url }}'">
                                         <td width="50">{% thumbnail '50x50' room.logo %}</td>
                                         <td>
                                             <div class="name-chat">
@@ -33,7 +33,7 @@
                                                 <span class="message">{{ room.object.messages.last.text }}</span>
                                             </div>
                                         </td>
-                                        <td style="text-align: right" width="100">{{ room.object.messages.last.datetime|date:'H:i' }}</td>
+                                        <td style="text-align: right" class="time" width="100">{{ room.object.messages.last.get_time }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

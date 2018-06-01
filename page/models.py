@@ -19,6 +19,11 @@ class SettingsUser(models.Model):
                                       format='JPEG',
                                       options={'quality': 100})
 
+    avatar_25x25 = ImageSpecField(source='avatar',
+                                  processors=[ResizeToFill(25, 25)],
+                                  format='JPEG',
+                                  options={'quality': 100})
+
     status = models.CharField(max_length=100, blank=True, null=True)
 
     photo_albums = models.ManyToManyField(PhotoAlbum, blank=True, related_name='set_user')

@@ -111,13 +111,13 @@ $(document).ready(function () {
         })
     });
 
-    if (location.pathname === '/rooms/') {
-        const message_notifications = new WebSocket('ws://' + '127.0.0.1:8888' + '/pages_alerts/' + $('#id-user').text() + '/');
-
-        message_notifications.onmessage = function (ev) {
-            const data = JSON.parse(ev.data);
-            alert(data.addressee)
-        }
-    }
+    // if (location.pathname === '/rooms/') {
+    //     const message_notifications = new WebSocket('ws://' + '127.0.0.1:8888' + '/pages_alerts/' + $('#id-user').text() + '/');
+    //
+    //     message_notifications.onmessage = function (ev) {
+    //         const data = JSON.parse(ev.data);
+    //         alert(data.addressee)
+    //     }
+    // }
 
 });

@@ -58,30 +58,96 @@ $(document).ready(function () {
         }
     });
 
-    const alerts = new WebSocket('ws://' + '127.0.0.1:8888' + '/pages_alerts/' + $('#id-user').text() + '/');
-    const current_rooms_in_counter = $('#list-rooms').text().slice(1, -1).split(',');
+    if ($('#id-user').text()) {
 
-    alerts.onmessage = function (ev) {
-        const data = JSON.parse(ev.data);
-        let counter = $('#count-messages');
-        const prev_counter = counter.text() ? parseInt(counter.text()) : 0;
+        const alerts = new WebSocket('ws://' + '127.0.0.1:8888' + '/pages_alerts/' + $('#id-user').text() + '/');
+        const current_rooms_in_counter = $('#list-rooms').text().slice(1, -1).split(',');
 
-        const alert = $('.new-m');
-        const name_in_alert = $('.new-m #name');
+        alerts.onmessage = function (ev) {
+            const data = JSON.parse(ev.data);
+            const id = String(data.room_id);
+            const path = location.pathname;
 
-        const id = String(data.room_id);
+            let counter = $('#count-messages');
+            const prev_counter = counter.text() ? parseInt(counter.text()) : 0;
+            const alert = $('.new-m');
+            const name_in_alert = $('.new-m #name');
 
-        if (current_rooms_in_counter.indexOf(id) === -1) {
-            counter.show();
-            counter.text(prev_counter + 1);
-            current_rooms_in_counter.push(id);
-            if (data.type === 'dialog' && location.pathname !== '/rooms/') {
+
+            if (current_rooms_in_counter.indexOf(id) === -1) {
+                counter.show();
+                counter.text(prev_counter + 1);
+                current_rooms_in_counter.push(id);
+            }
+            if (data.type === 'dialog' && path !== '/rooms/' && path.split('/')[1] !== 'room') {
                 name_in_alert.text(data.addressee);
                 alert.show(300);
-                setTimeout(function () {alert.hide(300)}, 5000)
+                setTimeout(function () {
+                    alert.hide(300)
+                }, 5000)
             }
+
+            if (path === '/rooms/') {
+                let room_object = $('#' + id);
+                room_object.addClass('no-read');
+                room_object.find('.last-message').html('<img height="25"' +
+                    ' src="' + data.avatar_25x25 + '" width="25"> ' +
+                    '<span class="message">' + data.text + '</span>');
+                room_object.find('.time').text(data.time);
+                room_object = room_object.remove();
+                room_object.prependTo($('#container-rooms'))
+            }
+
+            if (path.split('/')[1] === 'room') {
+                const chat_log = $('.chat-log');
+                let new_message_object = '';
+                const data_id_user = String(data.id_user);
+                const chat_item = $('.chat-item').last();
+                const last_id_user = chat_item.attr('user');
+
+                const last_datetime = chat_item.attr('time');
+
+                const data_time = parseInt(data.time.split(':').slice(-1));
+                const last_time = parseInt(last_datetime.split(':').slice(-1));
+
+                if ((data_id_user === last_id_user) && (last_datetime.length === 5) && (data_time - last_time < 6) ) {
+                    new_message_object = '<div user="' + data.id_user +'" time="' + data.time + '" class="chat-item no-read">\n' +
+                        '<table class="table table-sm table-item-chat">\n' +
+                        '<tbody>\n' +
+                        '<tr>\n' +
+                        '<td width="50"></td>\n' +
+                        '<td class="text">' + data.text + '</td>\n' +
+                        '</tr>\n' +
+                        '</tbody>\n' +
+                        '</table>\n' +
+                        '</div>'
+                } else {
+
+                    const short_name = data.addressee.split(' ')[0];
+
+                    new_message_object = '<div user="' + data.id_user +'" time="' + data.time + '" class="chat-item no-read">\n' +
+                        '<table class="table table-sm table-item-chat">\n' +
+                        '<tbody>\n' +
+                        '<tr class="title-message">\n' +
+                        '<td width="50"><img src="' + data.avatar_40x40 + '" alt=""></td>\n' +
+                        '<td class="info">\n' +
+                        '<b class="name-item-chat">' + short_name + '</b>\n' +
+                        '<br>\n' +
+                        '<span class="time-messages">' + data.time + '</span>\n' +
+                        '</td>\n' +
+                        '</tr>\n' +
+                        '<tr>\n' +
+                        '<td width="50"></td>\n' +
+                        '<td class="text">' + data.text + '</td>\n' +
+                        '</tr>\n' +
+                        '</tbody>\n' +
+                        '</table>\n' +
+                        '</div>'
+                }
+                chat_log.append(new_message_object)
+            }
+
         }
     }
-
 
 });

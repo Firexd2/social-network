@@ -17,7 +17,8 @@ def information(request):
         user = request.user
         user.save()
 
-    user = request.user
+        user = request.user
 
-    return {'unread_rooms': get_list_of_unread_rooms(user),
-            'new_friends': get_number_of_new_friends(user)}
+        return {'unread_rooms': get_list_of_unread_rooms(user),
+                'new_friends': get_number_of_new_friends(user)}
+    return {}

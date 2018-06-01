@@ -74,10 +74,12 @@ class SendMessageView(LoginRequiredMixin, ActionMixin, View):
         for user in User.objects.filter(settings__rooms=room):
             if user != self.request.user:
                 notify[user.id] = {'addressee': self.request.user.get_full_name(),
+                                   'id_user': self.request.user.id,
                                    'type': room.type,
                                    'room_id': room.id,
-                                   'avatar': self.request.user.settings.avatar.url,
-                                   'datetime': str(message.datetime),
+                                   'avatar_25x25': self.request.user.settings.avatar_25x25.url,
+                                   'avatar_40x40': self.request.user.settings.avatar_thumbnail.url,
+                                   'time': str(message.datetime.strftime('%H:%M')),
                                    'text': message.text}
 
         self.client.publish('alert', json.dumps(notify))

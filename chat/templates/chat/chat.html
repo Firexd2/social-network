@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 {% load staticfiles %}
 {% load imagekit %}
+{% load poll_extras %}
 {% block static %}
     <link rel="stylesheet" href="{% static 'chat/styles.css' %}">
 {% endblock %}
@@ -38,19 +39,19 @@
                 <div class="chat">
                     <div class="chat-log">
                         {% for message in object.object.messages.all %}
-                            <div class="chat-item {% if message.author.id != user.id %}{% if user not in message.read.all %}no-read{% endif %}{% else %}{% if message.read.all.count < 2 %}no-read{% endif %}{% endif %}">
+                            <div user="{{ message.author.id }}" time="{{ message.get_time }}" class="chat-item {% if message.author.id != user.id %}{% if user not in message.read.all %}no-read{% endif %}{% else %}{% if message.read.all.count < 2 %}no-read{% endif %}{% endif %}">
                                 <table class="table table-sm table-item-chat">
                                     <tbody>
-                                    {% ifchanged message.author.get_short_name %}
-                                        <tr>
+                                    {% if object.object.messages.all|previous:forloop.counter0 %}
+                                        <tr class="title-message">
                                             <td width="50">{% thumbnail '40x40' message.author.settings.avatar %}</td>
                                             <td class="info">
-                                                <b>{{ message.author.get_short_name }}</b>
+                                                <b class="name-item-chat">{{ message.author.get_short_name }}</b>
                                                 <br>
-                                                <span class="time-messages">{{ message.datetime }}</span>
+                                                <span class="time-messages">{{ message.get_time }}</span>
                                             </td>
                                         </tr>
-                                    {% endifchanged %}
+                                    {% endif %}
                                     <tr>
                                         <td width="50"></td>
                                         <td class="text">{{ message.text }}</td>
