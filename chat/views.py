@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, HttpResponse
 from django.views.generic import ListView, DetailView, TemplateView, View
 from base.mixins import UserMixin, ActionMixin, MultiFormMixin
 from chat.models import Room, Message
@@ -50,12 +50,52 @@ class RoomsListView(LoginRequiredMixin, ActionMixin, ListView):
         return sorted(data, key=lambda i: i['object'].messages.last().datetime, reverse=True)
 
 
-class SendMessageView(LoginRequiredMixin, ActionMixin, View):
+class SendingAlertsByWebsocket:
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, room, user, message=None):
+
+        self.room = room
+        self.user = user
+        if message:
+            self.message = message
+
         self.client = tornadoredis.Client()
         self.client.connect()
+
+    def new_message(self):
+
+        # отправляем оповещения о новом сообщении всем участникам комнаты, кроме самого себя
+
+        notify = dict()
+
+        for participant in User.objects.filter(settings__rooms=self.room):
+            if participant != self.user:
+                notify[participant.id] = {'user': self.user.get_full_name(),
+                                          'user_id': self.user.id,
+                                          'user_avatar_25x25': self.user.settings.avatar_25x25.url,
+                                          'user_avatar_40x40': self.user.settings.avatar_thumbnail.url,
+                                          'room_type': self.room.type,
+                                          'room_id': self.room.id,
+                                          'room_url': self.room.get_absolute_url(),
+                                          'room_logo': self.room.logo_50x50.url,
+                                          'room_name': self.room.name,
+                                          'time': str(self.message.datetime.strftime('%H:%M')),
+                                          'text': self.message.text,
+                                          }
+
+        self.client.publish('alert', json.dumps(notify))
+
+    def read_messages(self):
+
+        # отправляем всем участникам диалога, что сообщения в беседе кем-то прочитаны
+
+        users = User.objects.filter(settings__rooms=self.room)
+        users_ids = ' '.join([str(user.id) for user in users if user != self.user])
+
+        self.client.publish('read', json.dumps({'rooms_id': str(self.room.id), 'users_ids': users_ids}))
+
+
+class SendMessageView(LoginRequiredMixin, ActionMixin, View):
 
     @staticmethod
     def get_dialog(addressee, destination):
@@ -64,25 +104,6 @@ class SendMessageView(LoginRequiredMixin, ActionMixin, View):
                                    Q(settings_user__user=destination),
                                    type='dialog')
         return room[0]
-
-    def send_alert_websocket(self, room, message):
-
-        # отправляем оповещения о новом сообщении всем участникам комнаты, кроме самого себя
-
-        notify = dict()
-
-        for user in User.objects.filter(settings__rooms=room):
-            if user != self.request.user:
-                notify[user.id] = {'addressee': self.request.user.get_full_name(),
-                                   'id_user': self.request.user.id,
-                                   'type': room.type,
-                                   'room_id': room.id,
-                                   'avatar_25x25': self.request.user.settings.avatar_25x25.url,
-                                   'avatar_40x40': self.request.user.settings.avatar_thumbnail.url,
-                                   'time': str(message.datetime.strftime('%H:%M')),
-                                   'text': message.text}
-
-        self.client.publish('alert', json.dumps(notify))
 
     def action_new_message(self):
 
@@ -121,9 +142,18 @@ class SendMessageView(LoginRequiredMixin, ActionMixin, View):
 
         # отправляем оповещения о новом сообщении
 
-        self.send_alert_websocket(room, message)
+        # создаем экземпляр вебсокет
+        websocket = SendingAlertsByWebsocket(user=addressee, room=room, message=message)
+        # отправляем оповещение
+        websocket.new_message()
 
-        return redirect('/rooms/')
+        response = {'user_id': addressee.id,
+                    'short_name': addressee.get_short_name(),
+                    'time': message.get_time(),
+                    'user_avatar_40x40': addressee.settings.avatar_thumbnail.url,
+                    'text': message.text}
+
+        return HttpResponse(json.dumps(response))
 
 
 class RoomDetailView(LoginRequiredMixin, MultiFormMixin, DetailView):
@@ -147,23 +177,28 @@ class RoomDetailView(LoginRequiredMixin, MultiFormMixin, DetailView):
         return super().redirect_to_success_url(**kwargs)
 
     def get_instance_form_edit_name(self, **kwargs):
-        return self.get_object()['object']
+        return self.object['object']
 
     def get_instance_form_edit_logo(self, **kwargs):
-        return self.get_object()['object']
+        return self.object['object']
 
     def get_object(self, queryset=None):
         room = get_data(self.request.user, super(RoomDetailView, self).get_object())
-        self.read_to_message(room['object'])
+        # self.read_message(room['object'])
         return room
 
-    def read_to_message(self, room):
+    def read_message(self, room):
 
         user = self.request.user
         no_read_messages = room.messages.exclude(read=user)
 
         for message in no_read_messages:
             message.read.add(user)
+
+        if no_read_messages:
+            # создаем экземпляр вебсокет
+            websocket = SendingAlertsByWebsocket(user=user, room=room)
+            websocket.read_messages()
 
     def dispatch(self, request, *args, **kwargs):
 
@@ -202,5 +237,10 @@ class NewRoomView(LoginRequiredMixin, MultiFormMixin, TemplateView):
 
         # добавляем приветственное сообщение в беседу
         room.messages.add(message)
+
+        # создаем экземпляр вебсокет
+        websocket = SendingAlertsByWebsocket(user=user, room=room, message=message)
+        # отправляем оповещение
+        websocket.new_message()
 
         return self.redirect_to_success_url(**kwargs)

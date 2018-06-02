@@ -1,4 +1,6 @@
-if (document.querySelector(".chat-log")) {document.querySelector(".chat-log").scrollTop = document.querySelector(".chat-log").scrollHeight;}
+function scroll_to_bottom() {if (document.querySelector(".chat-log")) {document.querySelector(".chat-log").scrollTop = document.querySelector(".chat-log").scrollHeight;}}
+
+scroll_to_bottom();
 
 $(document).ready(function () {
 
@@ -10,8 +12,70 @@ $(document).ready(function () {
                 // $(this).val("");
                 e.preventDefault();
                 $('form[name=message]').submit();
+                scroll_to_bottom()
             }
         });
+    });
+
+    $('form[name=message]').on('submit', function (e) {
+        e.preventDefault();
+        const form_data = $(this).serializeArray();
+        $.post($(this).attr('action'), form_data, function (json) {
+
+            const chat_log = $('.chat-log');
+
+
+            const data = JSON.parse(json);
+            const data_user_id = String(data.user_id);
+
+            let new_message_object = '';
+
+
+            const chat_item = $('.chat-item').last();
+            const last_user_id = chat_item.attr('user');
+            const last_datetime = chat_item.attr('time');
+
+            const data_time = parseInt(data.time.split(':').slice(-1));
+            const last_time = parseInt(last_datetime.split(':').slice(-1));
+
+
+            if ((data_user_id === last_user_id) && (last_datetime.length === 5) && (data_time - last_time < 6) ) {
+                new_message_object = '<div user="' + data.user_id +'" time="' + data.time + '" class="chat-item no-read">\n' +
+                    '<table class="table table-sm table-item-chat">\n' +
+                    '<tbody>\n' +
+                    '<tr>\n' +
+                    '<td width="50"></td>\n' +
+                    '<td class="text">' + data.text + '</td>\n' +
+                    '</tr>\n' +
+                    '</tbody>\n' +
+                    '</table>\n' +
+                    '</div>'
+            } else {
+
+                const short_name = data.short_name;
+
+                new_message_object = '<div user="' + data.user_id +'" time="' + data.time + '" class="chat-item no-read">\n' +
+                    '<table class="table table-sm table-item-chat">\n' +
+                    '<tbody>\n' +
+                    '<tr class="title-message">\n' +
+                    '<td width="50"><img src="' + data.user_avatar_40x40 + '" alt=""></td>\n' +
+                    '<td class="info">\n' +
+                    '<b class="name-item-chat">' + short_name + '</b>\n' +
+                    '<br>\n' +
+                    '<span class="time-messages">' + data.time + '</span>\n' +
+                    '</td>\n' +
+                    '</tr>\n' +
+                    '<tr>\n' +
+                    '<td width="50"></td>\n' +
+                    '<td class="text">' + data.text + '</td>\n' +
+                    '</tr>\n' +
+                    '</tbody>\n' +
+                    '</table>\n' +
+                    '</div>'
+            }
+            chat_log.append(new_message_object);
+            $('textarea[name=action-new-message]').val('')
+        })
     });
 
 
@@ -111,13 +175,21 @@ $(document).ready(function () {
         })
     });
 
-    // if (location.pathname === '/rooms/') {
-    //     const message_notifications = new WebSocket('ws://' + '127.0.0.1:8888' + '/pages_alerts/' + $('#id-user').text() + '/');
-    //
-    //     message_notifications.onmessage = function (ev) {
-    //         const data = JSON.parse(ev.data);
-    //         alert(data.addressee)
-    //     }
-    // }
+    const reading_messages = new WebSocket('ws://' + '127.0.0.1:8888' + '/reading_messages/' + $('#id-user').text() + '/');
+
+    reading_messages.onmessage = function (ev) {
+        const data = JSON.parse(ev.data);
+        const path = location.pathname.split('/');
+
+        if (path[1] === 'rooms') {
+            let room_object = $('#' + data);
+            room_object.find('.last-message').removeClass('no-read')
+        } else {
+            if ($('#room').text()) {
+                $('.chat-item').removeClass('no-read')
+            }
+        }
+
+    }
 
 });

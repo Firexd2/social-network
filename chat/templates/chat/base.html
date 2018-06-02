@@ -29,7 +29,8 @@
                                                 <b>{{ room.name }}</b>
                                             </div>
                                             <div class="last-message {% if room.object.messages.last.author.id != user.id %}{% if user not in room.object.messages.last.read.all %}no-read{% endif %}{% else %}{% if room.object.messages.last.read.all.count < 2 %}no-read{% endif %}{% endif %}">
-                                                {% thumbnail '25x25' room.object.messages.last.author.settings.avatar %}
+{#                                                {% thumbnail '25x25' room.object.messages.last.author.settings.avatar %}#}
+                                                <img src="{{ room.object.messages.last.author.settings.avatar_25x25.url }}" alt="">
                                                 <span class="message">{{ room.object.messages.last.text }}</span>
                                             </div>
                                         </td>

@@ -1,7 +1,8 @@
 from django.db import models
 from django.urls import reverse
 from photo.models import directory_path_photo
-
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 from datetime import datetime, timedelta
 from django.utils import dateformat
 
@@ -15,7 +16,7 @@ class Message(models.Model):
     def get_time(self):
         datetime_now = datetime.now()
         if datetime_now.date() == self.datetime.date():
-            return self.datetime.time()
+            return dateformat.format(self.datetime, 'H:i')
 
         if datetime_now.date() - timedelta(days=1) == self.datetime.date():
             return 'Вчера ' + dateformat.format(self.datetime, 'H:i')
@@ -25,13 +26,18 @@ class Message(models.Model):
 
         return self.datetime
 
-    def get_time_flag(self):
-        return self.datetime .minute // 5
+    # def get_time_flag(self):
+    #     return self.datetime .minute // 5
 
 
 class Room(models.Model):
     name = models.CharField('Название беседы', max_length=20, null=True)
     logo = models.ImageField('Фотография беседы', upload_to=directory_path_photo, default='no-image.gif/')
+
+    logo_50x50 = ImageSpecField(source='logo',
+                                processors=[ResizeToFill(50, 50)],
+                                format='JPEG',
+                                options={'quality': 100})
 
     # dialog or conversation
     type = models.CharField('Тип комнаты', max_length=12, default='dialog')

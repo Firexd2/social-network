@@ -98,6 +98,8 @@ table.table-item-chat .info, table.table-item-chat .text {
 
 table.table-item-chat .text {
     min-width: 200px;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 
 .time-messages {

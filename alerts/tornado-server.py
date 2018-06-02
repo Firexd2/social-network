@@ -1,10 +1,11 @@
 import tornado.web
 
-from alerts.handlers import AlertsHandler
+from alerts.handlers import AlertsHandler, ReadingMessagesHandler
 
 app = tornado.web.Application(
     [
         (r'/pages_alerts/(?P<id_user>\w+)/', AlertsHandler),
+        (r'/reading_messages/(?P<id_user>\w+)/', ReadingMessagesHandler)
     ],
     debug=True
 )

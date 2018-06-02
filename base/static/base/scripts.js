@@ -79,8 +79,8 @@ $(document).ready(function () {
                 counter.text(prev_counter + 1);
                 current_rooms_in_counter.push(id);
             }
-            if (data.type === 'dialog' && path !== '/rooms/' && path.split('/')[1] !== 'room') {
-                name_in_alert.text(data.addressee);
+            if (data.room_type === 'dialog' && path !== '/rooms/' && path.split('/')[1] !== 'room') {
+                name_in_alert.text(data.user);
                 alert.show(300);
                 setTimeout(function () {
                     alert.hide(300)
@@ -89,29 +89,45 @@ $(document).ready(function () {
 
             if (path === '/rooms/') {
                 let room_object = $('#' + id);
-                room_object.addClass('no-read');
-                room_object.find('.last-message').html('<img height="25"' +
-                    ' src="' + data.avatar_25x25 + '" width="25"> ' +
-                    '<span class="message">' + data.text + '</span>');
-                room_object.find('.time').text(data.time);
-                room_object = room_object.remove();
-                room_object.prependTo($('#container-rooms'))
+                if (room_object.length) {
+                    room_object.addClass('no-read');
+                    room_object.find('.last-message').html('<img height="25"' +
+                        ' src="' + data.user_avatar_25x25 + '" width="25"> ' +
+                        '<span class="message">' + data.text + '</span>');
+                    room_object.find('.time').text(data.time);
+                    room_object = room_object.remove();
+                    room_object.prependTo($('#container-rooms'))
+                } else {
+                    $('#container-rooms').prepend('<tr id="' + data.room_id +'" class="no-read" onclick="location.href=\'' + data.room_url +'\'">\n' +
+                        '    <td width="50"><img src="'+ data.room_logo +'" alt=""></td>\n' +
+                        '    <td>\n' +
+                        '    <div class="name-chat">\n' +
+                        '    <b>' + data.room_name + '</b>\n' +
+                        '    </div>\n' +
+                        '    <div class="last-message {% if room.object.messages.last.author.id != user.id %}{% if user not in room.object.messages.last.read.all %}no-read{% endif %}{% else %}{% if room.object.messages.last.read.all.count < 2 %}no-read{% endif %}{% endif %}">\n' +
+                        '    <img src="' + data.user_avatar_25x25 + '" alt="">\n' +
+                        '    <span class="message">' + data.text + '</span>\n' +
+                        '    </div>\n' +
+                        '    </td>\n' +
+                        '    <td style="text-align: right" class="time" width="100">' + data.time + '</td>\n' +
+                        '</tr>')
+                }
             }
 
             if (path.split('/')[1] === 'room') {
                 const chat_log = $('.chat-log');
                 let new_message_object = '';
-                const data_id_user = String(data.id_user);
+                const data_user_id = String(data.user_id);
                 const chat_item = $('.chat-item').last();
-                const last_id_user = chat_item.attr('user');
+                const last_user_id = chat_item.attr('user');
 
                 const last_datetime = chat_item.attr('time');
 
                 const data_time = parseInt(data.time.split(':').slice(-1));
                 const last_time = parseInt(last_datetime.split(':').slice(-1));
 
-                if ((data_id_user === last_id_user) && (last_datetime.length === 5) && (data_time - last_time < 6) ) {
-                    new_message_object = '<div user="' + data.id_user +'" time="' + data.time + '" class="chat-item no-read">\n' +
+                if ((data_user_id === last_user_id) && (last_datetime.length === 5) && (data_time - last_time < 6) ) {
+                    new_message_object = '<div user="' + data.user_id +'" time="' + data.time + '" class="chat-item no-read">\n' +
                         '<table class="table table-sm table-item-chat">\n' +
                         '<tbody>\n' +
                         '<tr>\n' +
@@ -123,13 +139,13 @@ $(document).ready(function () {
                         '</div>'
                 } else {
 
-                    const short_name = data.addressee.split(' ')[0];
+                    const short_name = data.user.split(' ')[0];
 
-                    new_message_object = '<div user="' + data.id_user +'" time="' + data.time + '" class="chat-item no-read">\n' +
+                    new_message_object = '<div user="' + data.user_id +'" time="' + data.time + '" class="chat-item no-read">\n' +
                         '<table class="table table-sm table-item-chat">\n' +
                         '<tbody>\n' +
                         '<tr class="title-message">\n' +
-                        '<td width="50"><img src="' + data.avatar_40x40 + '" alt=""></td>\n' +
+                        '<td width="50"><img src="' + data.user_avatar_40x40 + '" alt=""></td>\n' +
                         '<td class="info">\n' +
                         '<b class="name-item-chat">' + short_name + '</b>\n' +
                         '<br>\n' +
