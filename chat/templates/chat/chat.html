@@ -38,9 +38,9 @@
                 </table>
                 <div class="chat">
                     <div id="room" hidden>{{ object.object.id }}</div>
-                    <div class="chat-log">
+                    <div id="chat" class="chat-log">
                         {% for message in object.object.messages.all %}
-                            <div user="{{ message.author.id }}" time="{{ message.get_time }}" class="chat-item {% if message.author.id != user.id %}{% if user not in message.read.all %}no-read{% endif %}{% else %}{% if message.read.all.count < 2 %}no-read{% endif %}{% endif %}">
+                            <div user="{{ message.author.id }}" time="{{ message.get_time }}" class="chat-item {% if message.author.id != user.id %} other {% if user not in message.read.all %}no-read{% endif %}{% else %}{% if message.read.all.count < 2 %}no-read{% endif %}{% endif %}">
                                 <table class="table table-sm table-item-chat">
                                     <tbody>
                                     {% if object.object.messages.all|previous:forloop.counter0 %}

@@ -19,4 +19,13 @@ $(document).ready(function () {
         $('input[name=status]').show().focus()
     });
 
+    $('form[name=new-message]').on('submit', function (e) {
+        e.preventDefault();
+        const to_redirect = '/rooms/';
+        const data = $(this).serializeArray();
+        $.post('/send_message/', data, function () {
+            location.href=to_redirect
+        })
+    });
+
 });

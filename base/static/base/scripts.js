@@ -1,5 +1,10 @@
 (function(b){b.fn.autoResize=function(f){let a=b.extend({onResize:function(){},animate:!0,animateDuration:150,animateCallback:function(){},extraSpace:20,limit:1E3},f);this.filter("textarea").each(function(){let d=b(this).css({"overflow-y":"hidden",display:"block"}),f=d.height(),g=function(){var c={};b.each(["height","width","lineHeight","textDecoration","letterSpacing"],function(b,a){c[a]=d.css(a)});return d.clone().removeAttr("id").removeAttr("name").css({position:"absolute",top:0,left:-9999}).css(c).attr("tabIndex","-1").insertBefore(d)}(),h=null,e=function(){g.height(0).val(b(this).val()).scrollTop(1E4);var c=Math.max(g.scrollTop(),f)+a.extraSpace,e=b(this).add(g);h!==c&&(h=c,c>=a.limit?b(this).css("overflow-y",""):(a.onResize.call(this),a.animate&&"block"===d.css("display")?e.stop().animate({height:c},a.animateDuration,a.animateCallback):e.height(c)))};d.unbind(".dynSiz").bind("keyup.dynSiz",e).bind("keydown.dynSiz",e).bind("change.dynSiz",e)});return this}})(jQuery);
 
+function scroll_to_bottom() {
+    const block = document.getElementById("chat");
+    block.scrollTop = block.scrollHeight;
+}
+
 jQuery(function(){
     jQuery('textarea').autoResize();
 });
@@ -60,7 +65,7 @@ $(document).ready(function () {
 
     if ($('#id-user').text()) {
 
-        const alerts = new WebSocket('ws://' + '127.0.0.1:8888' + '/pages_alerts/' + $('#id-user').text() + '/');
+        const alerts = new WebSocket('ws://' + location.host.slice(0,-4) + '8888' + '/pages_alerts/' + $('#id-user').text() + '/');
         const current_rooms_in_counter = $('#list-rooms').text().slice(1, -1).split(',');
 
         alerts.onmessage = function (ev) {
@@ -81,6 +86,7 @@ $(document).ready(function () {
             }
             if (data.room_type === 'dialog' && path !== '/rooms/' && path.split('/')[1] !== 'room') {
                 name_in_alert.text(data.user);
+                console.log('123')
                 alert.show(300);
                 setTimeout(function () {
                     alert.hide(300)
@@ -98,13 +104,14 @@ $(document).ready(function () {
                     room_object = room_object.remove();
                     room_object.prependTo($('#container-rooms'))
                 } else {
+                    $('#non-chats').remove();
                     $('#container-rooms').prepend('<tr id="' + data.room_id +'" class="no-read" onclick="location.href=\'' + data.room_url +'\'">\n' +
                         '    <td width="50"><img src="'+ data.room_logo +'" alt=""></td>\n' +
                         '    <td>\n' +
                         '    <div class="name-chat">\n' +
                         '    <b>' + data.room_name + '</b>\n' +
                         '    </div>\n' +
-                        '    <div class="last-message {% if room.object.messages.last.author.id != user.id %}{% if user not in room.object.messages.last.read.all %}no-read{% endif %}{% else %}{% if room.object.messages.last.read.all.count < 2 %}no-read{% endif %}{% endif %}">\n' +
+                        '    <div class="last-message no-read">\n' +
                         '    <img src="' + data.user_avatar_25x25 + '" alt="">\n' +
                         '    <span class="message">' + data.text + '</span>\n' +
                         '    </div>\n' +
@@ -127,7 +134,7 @@ $(document).ready(function () {
                 const last_time = parseInt(last_datetime.split(':').slice(-1));
 
                 if ((data_user_id === last_user_id) && (last_datetime.length === 5) && (data_time - last_time < 6) ) {
-                    new_message_object = '<div user="' + data.user_id +'" time="' + data.time + '" class="chat-item no-read">\n' +
+                    new_message_object = '<div user="' + data.user_id +'" time="' + data.time + '" class="chat-item other no-read">\n' +
                         '<table class="table table-sm table-item-chat">\n' +
                         '<tbody>\n' +
                         '<tr>\n' +
@@ -141,7 +148,7 @@ $(document).ready(function () {
 
                     const short_name = data.user.split(' ')[0];
 
-                    new_message_object = '<div user="' + data.user_id +'" time="' + data.time + '" class="chat-item no-read">\n' +
+                    new_message_object = '<div user="' + data.user_id +'" time="' + data.time + '" class="chat-item other no-read">\n' +
                         '<table class="table table-sm table-item-chat">\n' +
                         '<tbody>\n' +
                         '<tr class="title-message">\n' +
@@ -160,7 +167,8 @@ $(document).ready(function () {
                         '</table>\n' +
                         '</div>'
                 }
-                chat_log.append(new_message_object)
+                chat_log.append(new_message_object);
+                scroll_to_bottom()
             }
 
         }

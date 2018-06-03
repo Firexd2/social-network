@@ -1,19 +1,15 @@
-from django.shortcuts import render, redirect, reverse, HttpResponse
-from django.views.generic import ListView, DetailView, TemplateView, View
-from base.mixins import UserMixin, ActionMixin, MultiFormMixin
-from chat.models import Room, Message
-from user.models import User
-from django.db.models import Q, F
-
-from django.shortcuts import Http404
-
-from chat.forms import NewRoomForm, EditRoomLogoForm, EditRoomNameForm, OutRoomForm
-
-from django.contrib.auth.mixins import LoginRequiredMixin
+import json
 
 import tornadoredis
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import Http404
+from django.shortcuts import HttpResponse
+from django.views.generic import DetailView, ListView, TemplateView, View
 
-import json
+from base.mixins import ActionMixin, MultiFormMixin
+from chat.forms import EditRoomLogoForm, EditRoomNameForm, NewRoomForm, OutRoomForm
+from chat.models import Message, Room
+from user.models import User
 
 
 def get_data(i, room):
@@ -50,60 +46,57 @@ class RoomsListView(LoginRequiredMixin, ActionMixin, ListView):
         return sorted(data, key=lambda i: i['object'].messages.last().datetime, reverse=True)
 
 
-class SendingAlertsByWebsocket:
+# class SendingAlertsByWebsocket:
+#
+#     def __init__(self, room, user, message=None):
+#
+#         self.room = room
+#         self.user = user
+#         if message:
+#             self.message = message
+#
+#         self.client = tornadoredis.Client()
+#         self.client.connect()
 
-    def __init__(self, room, user, message=None):
 
-        self.room = room
-        self.user = user
-        if message:
-            self.message = message
+class MessageView(LoginRequiredMixin, ActionMixin, View):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.client = tornadoredis.Client()
         self.client.connect()
-
-    def new_message(self):
-
-        # отправляем оповещения о новом сообщении всем участникам комнаты, кроме самого себя
-
-        notify = dict()
-
-        for participant in User.objects.filter(settings__rooms=self.room):
-            if participant != self.user:
-                notify[participant.id] = {'user': self.user.get_full_name(),
-                                          'user_id': self.user.id,
-                                          'user_avatar_25x25': self.user.settings.avatar_25x25.url,
-                                          'user_avatar_40x40': self.user.settings.avatar_thumbnail.url,
-                                          'room_type': self.room.type,
-                                          'room_id': self.room.id,
-                                          'room_url': self.room.get_absolute_url(),
-                                          'room_logo': self.room.logo_50x50.url,
-                                          'room_name': self.room.name,
-                                          'time': str(self.message.datetime.strftime('%H:%M')),
-                                          'text': self.message.text,
-                                          }
-
-        self.client.publish('alert', json.dumps(notify))
-
-    def read_messages(self):
-
-        # отправляем всем участникам диалога, что сообщения в беседе кем-то прочитаны
-
-        users = User.objects.filter(settings__rooms=self.room)
-        users_ids = ' '.join([str(user.id) for user in users if user != self.user])
-
-        self.client.publish('read', json.dumps({'rooms_id': str(self.room.id), 'users_ids': users_ids}))
-
-
-class SendMessageView(LoginRequiredMixin, ActionMixin, View):
 
     @staticmethod
     def get_dialog(addressee, destination):
 
-        room = Room.objects.filter(Q(settings_user__user=addressee) and
-                                   Q(settings_user__user=destination),
-                                   type='dialog')
-        return room[0]
+        # room = Room.objects.filter(Q(settings_user__user=addressee),
+        #                            Q(settings_user__user=destination),
+        #                            type='dialog')
+
+        room = Room.objects. \
+            filter(settings_user__user=addressee). \
+            filter(settings_user__user=destination). \
+            filter(type='dialog')
+
+        if len(room) > 1:
+            raise SystemError('В get_dialog room получился неоднозначным')
+
+        return room[0] if room else None
+
+    def action_reading_messages(self):
+
+        user = self.request.user
+        room = Room.objects.get(id=self.request.POST['room_id'])
+
+        unread_messages = room.messages.exclude(read=user)
+
+        for message in unread_messages:
+            message.read.add(user)
+
+        # создаем экземпляр вебсокет
+        self.read_messages_to_websocket(room, user)
+
+        return HttpResponse('200')
 
     def action_new_message(self):
 
@@ -140,12 +133,8 @@ class SendMessageView(LoginRequiredMixin, ActionMixin, View):
         message.read.add(addressee)
         room.messages.add(message)
 
-        # отправляем оповещения о новом сообщении
-
-        # создаем экземпляр вебсокет
-        websocket = SendingAlertsByWebsocket(user=addressee, room=room, message=message)
-        # отправляем оповещение
-        websocket.new_message()
+        # отправляем оповещение по вебсокету
+        self.send_message_to_websocket(room, addressee, message)
 
         response = {'user_id': addressee.id,
                     'short_name': addressee.get_short_name(),
@@ -154,6 +143,45 @@ class SendMessageView(LoginRequiredMixin, ActionMixin, View):
                     'text': message.text}
 
         return HttpResponse(json.dumps(response))
+
+    def send_message_to_websocket(self, room, user, message):
+
+        # отправляем оповещения о новом сообщении всем участникам комнаты, кроме самого себя
+
+        notify = dict()
+
+        if room.type == 'dialog':
+            room_name = user.get_full_name()
+            room_logo = user.settings.avatar_50x50.url
+        else:
+            room_name = room.name
+            room_logo = room.logo_50x50.url
+
+        for participant in User.objects.filter(settings__rooms=room):
+            if participant != user:
+                notify[participant.id] = {'user': user.get_full_name(),
+                                          'user_id': user.id,
+                                          'user_avatar_25x25': user.settings.avatar_25x25.url,
+                                          'user_avatar_40x40': user.settings.avatar_thumbnail.url,
+                                          'room_type': room.type,
+                                          'room_id': room.id,
+                                          'room_url': room.get_absolute_url(),
+                                          'room_logo': room_logo,
+                                          'room_name': room_name,
+                                          'time': str(message.datetime.strftime('%H:%M')),
+                                          'text': message.text,
+                                          }
+
+        self.client.publish('alert', json.dumps(notify))
+
+    def read_messages_to_websocket(self, room, mine):
+
+        # отправляем всем участникам диалога, что сообщения в беседе кем-то прочитаны
+
+        users = User.objects.filter(settings__rooms=room)
+        users_ids = ' '.join([str(user.id) for user in users if user != mine])
+
+        self.client.publish('read', json.dumps({'rooms_id': str(room.id), 'users_ids': users_ids}))
 
 
 class RoomDetailView(LoginRequiredMixin, MultiFormMixin, DetailView):
@@ -186,19 +214,6 @@ class RoomDetailView(LoginRequiredMixin, MultiFormMixin, DetailView):
         room = get_data(self.request.user, super(RoomDetailView, self).get_object())
         # self.read_message(room['object'])
         return room
-
-    def read_message(self, room):
-
-        user = self.request.user
-        no_read_messages = room.messages.exclude(read=user)
-
-        for message in no_read_messages:
-            message.read.add(user)
-
-        if no_read_messages:
-            # создаем экземпляр вебсокет
-            websocket = SendingAlertsByWebsocket(user=user, room=room)
-            websocket.read_messages()
 
     def dispatch(self, request, *args, **kwargs):
 

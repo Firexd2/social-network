@@ -17,10 +17,11 @@
                             <input type="text" placeholder="Поиск" class="form-control">
                         </div>
                     </div>
-                    {% if object_list %}
-                        <div>
-                            <table class="table table-sm table-chat">
-                                <tbody id="container-rooms">
+
+                    <div>
+                        <table class="table table-sm table-chat">
+                            <tbody id="container-rooms">
+                            {% if object_list %}
                                 {% for room in object_list %}
                                     <tr id="{{ room.object.id }}" class="{% if user not in room.object.messages.last.read.all %}no-read{% endif %}" onclick="location.href='{{ room.object.get_absolute_url }}'">
                                         <td width="50">{% thumbnail '50x50' room.logo %}</td>
@@ -29,7 +30,7 @@
                                                 <b>{{ room.name }}</b>
                                             </div>
                                             <div class="last-message {% if room.object.messages.last.author.id != user.id %}{% if user not in room.object.messages.last.read.all %}no-read{% endif %}{% else %}{% if room.object.messages.last.read.all.count < 2 %}no-read{% endif %}{% endif %}">
-{#                                                {% thumbnail '25x25' room.object.messages.last.author.settings.avatar %}#}
+                                                {#                                                {% thumbnail '25x25' room.object.messages.last.author.settings.avatar %}#}
                                                 <img src="{{ room.object.messages.last.author.settings.avatar_25x25.url }}" alt="">
                                                 <span class="message">{{ room.object.messages.last.text }}</span>
                                             </div>
@@ -37,14 +38,17 @@
                                         <td style="text-align: right" class="time" width="100">{{ room.object.messages.last.get_time }}</td>
                                     </tr>
                                 {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        {% else %}
-                        <hr>
-                        <p style="font-size: 14px">У вас нет бесед. Найдите друзей, воспользовавшись поиском в верхней части сайта, добавьте их в
-                        список друзей и напишите им сообщение, нажав на их странице кнопку "Написать сообщение".</p>
-                    {% endif %}
+                            {% else %}
+                                <div id="non-chats">
+                                    <hr>
+                                    <p style="font-size: 14px">У вас нет бесед. Найдите друзей, воспользовавшись поиском в верхней части сайта, добавьте их в
+                                        список друзей и напишите им сообщение, нажав на их странице кнопку "Написать сообщение".</p>
+                                </div>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
                 {% endblock %}
             </div>
         </div>

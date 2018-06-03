@@ -19,6 +19,11 @@ class SettingsUser(models.Model):
                                       format='JPEG',
                                       options={'quality': 100})
 
+    avatar_50x50 = ImageSpecField(source='avatar',
+                                  processors=[ResizeToFill(50, 50)],
+                                  format='JPEG',
+                                  options={'quality': 100})
+
     avatar_25x25 = ImageSpecField(source='avatar',
                                   processors=[ResizeToFill(25, 25)],
                                   format='JPEG',

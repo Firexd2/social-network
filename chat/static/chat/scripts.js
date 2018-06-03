@@ -1,4 +1,7 @@
-function scroll_to_bottom() {if (document.querySelector(".chat-log")) {document.querySelector(".chat-log").scrollTop = document.querySelector(".chat-log").scrollHeight;}}
+function scroll_to_bottom() {
+    const block = document.getElementById("chat");
+    block.scrollTop = block.scrollHeight;
+}
 
 scroll_to_bottom();
 
@@ -12,9 +15,30 @@ $(document).ready(function () {
                 // $(this).val("");
                 e.preventDefault();
                 $('form[name=message]').submit();
-                scroll_to_bottom()
             }
         });
+    });
+
+    $('textarea[name=action-new-message]').on('focus', function () {
+        const unread_item = $('.no-read.other');
+        if (unread_item.length) {
+
+            const token = $('input[name=csrfmiddlewaretoken]').val();
+
+            $.post('/send_message/', {
+                action_reading_messages: true,
+                csrfmiddlewaretoken: token,
+                room_id: $('#room').text(),
+            }, function () {
+                unread_item.removeClass('no-read');
+                const counter_object = $('.counter-in-menu');
+                if (parseInt(counter_object.text()) - 1 > 0) {
+                    counter_object.text(parseInt(counter_object.text()) - 1)
+                } else {
+                    counter_object.css({'display': 'none'})
+                }
+            })
+        }
     });
 
     $('form[name=message]').on('submit', function (e) {
@@ -75,6 +99,8 @@ $(document).ready(function () {
             }
             chat_log.append(new_message_object);
             $('textarea[name=action-new-message]').val('')
+            scroll_to_bottom()
+
         })
     });
 
@@ -154,7 +180,7 @@ $(document).ready(function () {
 
         let data = $(this).serializeArray();
         data[1].value = $('.selected').attr('id');
-        $.post(to_redirect, data, function () {
+        $.post('/send_message/', data, function () {
             location.href=to_redirect
         })
     });
@@ -164,6 +190,7 @@ $(document).ready(function () {
         let data = $(this).serializeArray();
 
         const friends_selected = $('.selected');
+
         let ids = '';
         for (let i=0;i<friends_selected.length;i++) {
             ids += friends_selected.eq(i).attr('id') + ','
@@ -175,7 +202,7 @@ $(document).ready(function () {
         })
     });
 
-    const reading_messages = new WebSocket('ws://' + '127.0.0.1:8888' + '/reading_messages/' + $('#id-user').text() + '/');
+    const reading_messages = new WebSocket('ws://' + location.host.slice(0,-4) + '8888' + '/reading_messages/' + $('#id-user').text() + '/');
 
     reading_messages.onmessage = function (ev) {
         const data = JSON.parse(ev.data);

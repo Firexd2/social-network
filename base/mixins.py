@@ -145,4 +145,5 @@ class ActionMixin(ContextMixin):
         name = action[0]
 
         handler_action = getattr(self, name.replace('-', '_'), None)
+
         return handler_action()
