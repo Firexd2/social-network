@@ -131,9 +131,9 @@ class MultiFormMixin(ContextMixin):
 
                 # normal form validation
                 if form.is_valid():
-                    handler = getattr(self, 'valid_form_' + form_name, self.general_valid_form)
+                    handler = getattr(self, 'form_valid_' + form_name, self.general_valid_form)
                 else:
-                    handler = getattr(self, 'invalid_form_' + form_name, self.general_invalid_form)
+                    handler = getattr(self, 'form_invalid_' + form_name, self.general_invalid_form)
                 return handler(form)
 
     def get_form(self, form_name):

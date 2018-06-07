@@ -40,14 +40,14 @@ class DetailAlbumView(UserMixin, MultiFormMixin, DetailView):
                     'cover': CoverAlbumForm,
                     'delete': DeleteAlbumForm}
 
-    def valid_form_new_photo(self, form):
+    def form_valid_new_photo(self, form):
         photo = form.save(commit=False)
         photo.save()
         album = self.get_object()
         album.photos.add(photo)
         return super().redirect_to_success_url()
 
-    def valid_form_delete(self, form):
+    def form_valid_delete(self, form):
         album = self.get_object()
         album.delete()
         return super().redirect_to_success_url()

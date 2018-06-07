@@ -177,7 +177,7 @@ class RoomDetailView(LoginRequiredMixin, MultiFormMixin, DetailView):
 
     form_success_urls = {'out_room': '/rooms/'}
 
-    def valid_form_out_room(self, form):
+    def form_valid_out_room(self, form):
 
         room_id = form.cleaned_data['id']
         room = Room.objects.get(id=room_id)
@@ -209,7 +209,7 @@ class NewRoomView(LoginRequiredMixin, MultiFormMixin, TemplateView):
 
     form_classes = {'new_room': NewRoomForm}
 
-    def valid_form_new_room(self, form):
+    def form_valid_new_room(self, form):
 
         # получаем данные формы и экземляр user, создающего комнату
         data = form.cleaned_data

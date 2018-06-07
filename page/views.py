@@ -28,7 +28,7 @@ class PageView(UserMixin, MultiFormMixin, TemplateView):
     def get_instance_form_status(self):
         return self.request.user.settings
 
-    def valid_form_new_avatar(self, form):
+    def form_valid_new_avatar(self, form):
 
         photo = form.save()
 
@@ -48,7 +48,7 @@ class PageView(UserMixin, MultiFormMixin, TemplateView):
 
         return self.redirect_to_success_url()
 
-    def valid_form_new_writting_wall(self, form):
+    def form_valid_new_writting_wall(self, form):
         user = self.request.user
         current_user = self.get_user
 
