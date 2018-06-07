@@ -1,29 +1,13 @@
-import tornado.gen
-import tornado.httpserver
-import tornado.ioloop
-import tornado.web
-import tornado.websocket
-import tornadoredis
-
 import json
 
+import tornado.websocket
 
-class AlertsHandler(tornado.websocket.WebSocketHandler):
+from alerts.mixins import HandlerRedisMessages
 
-    def __init__(self, *args, **kwargs):
-        super(AlertsHandler, self).__init__(*args, **kwargs)
-        self.id_user = ''
-        self.client = tornadoredis.Client()
-        self.listen()
 
-    def check_origin(self, origin):
-        return True
+class NewMessageHandler(HandlerRedisMessages, tornado.websocket.WebSocketHandler):
 
-    @tornado.gen.engine
-    def listen(self):
-        self.client.connect()
-        yield tornado.gen.Task(self.client.subscribe, 'alert')
-        self.client.listen(self.on_message)
+    channel = 'alert'
 
     def on_message(self, msg):
 
@@ -31,39 +15,17 @@ class AlertsHandler(tornado.websocket.WebSocketHandler):
 
             json_msg = msg.body
             message = json.loads(json_msg)
-
-            # If in message is the self.id_user, then send to client
+            # If the message contains the self.id_user, then send to client
             if self.id_user in message.keys():
                 self.write_message(json.dumps(message[self.id_user]))
 
         if msg.kind == 'disconnect':
             self.close()
 
-    def open(self, id_user):
-        self.id_user = id_user
 
-    def on_close(self):
-        if self.client.subscribed:
-            self.client.unsubscribe('alert')
-            self.client.disconnect()
+class ReadingMessagesHandler(HandlerRedisMessages, tornado.websocket.WebSocketHandler):
 
-
-class ReadingMessagesHandler(tornado.websocket.WebSocketHandler):
-
-    def __init__(self, *args, **kwargs):
-        super(ReadingMessagesHandler, self).__init__(*args, **kwargs)
-        self.id_user = ''
-        self.client = tornadoredis.Client()
-        self.listen()
-
-    def check_origin(self, origin):
-        return True
-
-    @tornado.gen.engine
-    def listen(self):
-        self.client.connect()
-        yield tornado.gen.Task(self.client.subscribe, 'read')
-        self.client.listen(self.on_message)
+    channel = 'read'
 
     def on_message(self, msg):
 
@@ -77,12 +39,3 @@ class ReadingMessagesHandler(tornado.websocket.WebSocketHandler):
 
         if msg.kind == 'disconnect':
             self.close()
-
-    def open(self, id_user):
-        print('OK')
-        self.id_user = id_user
-
-    def on_close(self):
-        if self.client.subscribed:
-            self.client.unsubscribe('read')
-            self.client.disconnect()

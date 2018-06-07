@@ -5,7 +5,7 @@
 {% endblock %}
 {% block container %}
     <div class="row">
-        <div class="col-lg-6 offset-md-3">
+        <div class="col-xs-6 offset-md-3">
             <div class="register block">
                 <form name="auth" method="POST">{% csrf_token %}
                     {% if form.non_field_errors %}

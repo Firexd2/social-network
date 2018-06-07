@@ -27,5 +27,4 @@ $(document).ready(function () {
             location.href=to_redirect
         })
     });
-
 });

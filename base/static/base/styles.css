@@ -141,11 +141,9 @@ form label {
     height: 500px;
 }
 
-/*@media (min-width: 1200px) {*/
-    .container{
-        max-width: 1000px;
-    }
-/*}*/
+.container{
+    width: 1000px;
+}
 
 .padding {
     padding: 0 6px 0 6px !important;

@@ -1,7 +1,8 @@
-from django.urls import path
-from . import views
-from .tools import activate
 from django.contrib.auth import views as auth_views
+from django.urls import path
+
+from user import views
+from user.tools import activate
 
 urlpatterns = [
     path('', views.LoginFormView.as_view()),

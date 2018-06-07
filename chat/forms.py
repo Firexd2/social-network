@@ -1,5 +1,6 @@
-from chat.models import Message, Room
 from django import forms
+
+from chat.models import Message, Room
 
 
 class NewRoomForm(forms.ModelForm):
@@ -49,4 +50,3 @@ class SendMessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ['text', 'id', 'destination']
-

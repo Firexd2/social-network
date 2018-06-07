@@ -1,6 +1,7 @@
 from django.db import models
-from sn import settings
 from django.urls import reverse
+
+from sn import settings
 
 
 def directory_path_photo(instance, filename):
@@ -27,5 +28,3 @@ class PhotoAlbum(models.Model):
 class Photo(models.Model):
     photo = models.ImageField('Фотография', upload_to=directory_path_photo)
     datetime = models.DateTimeField(auto_now_add=True)
-    # name = models.CharField(max_length=100, null=True, blank=True)
-    # description = models.TextField(blank=True, null=True)

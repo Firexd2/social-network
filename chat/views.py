@@ -32,7 +32,7 @@ def get_data(i, room):
 
 class RoomsListView(LoginRequiredMixin, ActionMixin, ListView):
 
-    template_name = 'chat/base.html'
+    template_name = 'chat/rooms.html'
 
     def get_queryset(self):
 
@@ -46,19 +46,6 @@ class RoomsListView(LoginRequiredMixin, ActionMixin, ListView):
         return sorted(data, key=lambda i: i['object'].messages.last().datetime, reverse=True)
 
 
-# class SendingAlertsByWebsocket:
-#
-#     def __init__(self, room, user, message=None):
-#
-#         self.room = room
-#         self.user = user
-#         if message:
-#             self.message = message
-#
-#         self.client = tornadoredis.Client()
-#         self.client.connect()
-
-
 class MessageView(LoginRequiredMixin, ActionMixin, View):
 
     def __init__(self, *args, **kwargs):
@@ -68,10 +55,6 @@ class MessageView(LoginRequiredMixin, ActionMixin, View):
 
     @staticmethod
     def get_dialog(addressee, destination):
-
-        # room = Room.objects.filter(Q(settings_user__user=addressee),
-        #                            Q(settings_user__user=destination),
-        #                            type='dialog')
 
         room = Room.objects. \
             filter(settings_user__user=addressee). \
@@ -185,7 +168,7 @@ class MessageView(LoginRequiredMixin, ActionMixin, View):
 
 
 class RoomDetailView(LoginRequiredMixin, MultiFormMixin, DetailView):
-    template_name = 'chat/chat.html'
+    template_name = 'chat/room.html'
     model = Room
 
     form_classes = {'edit_logo': EditRoomLogoForm,
@@ -194,25 +177,23 @@ class RoomDetailView(LoginRequiredMixin, MultiFormMixin, DetailView):
 
     form_success_urls = {'out_room': '/rooms/'}
 
-    def valid_form_out_room(self, **kwargs):
-        form = kwargs['form']
+    def valid_form_out_room(self, form):
 
         room_id = form.cleaned_data['id']
         room = Room.objects.get(id=room_id)
 
         self.request.user.settings.rooms.remove(room)
 
-        return super().redirect_to_success_url(**kwargs)
+        return super().redirect_to_success_url()
 
-    def get_instance_form_edit_name(self, **kwargs):
+    def get_instance_form_edit_name(self):
         return self.object['object']
 
-    def get_instance_form_edit_logo(self, **kwargs):
+    def get_instance_form_edit_logo(self):
         return self.object['object']
 
     def get_object(self, queryset=None):
         room = get_data(self.request.user, super(RoomDetailView, self).get_object())
-        # self.read_message(room['object'])
         return room
 
     def dispatch(self, request, *args, **kwargs):
@@ -228,10 +209,9 @@ class NewRoomView(LoginRequiredMixin, MultiFormMixin, TemplateView):
 
     form_classes = {'new_room': NewRoomForm}
 
-    def valid_form_new_room(self, **kwargs):
+    def valid_form_new_room(self, form):
 
-        # получаем форму, данные формы и экземляр user, создающего комнату
-        form = kwargs['form']
+        # получаем данные формы и экземляр user, создающего комнату
         data = form.cleaned_data
         user = self.request.user
 
@@ -252,10 +232,12 @@ class NewRoomView(LoginRequiredMixin, MultiFormMixin, TemplateView):
 
         # добавляем приветственное сообщение в беседу
         room.messages.add(message)
+        # добавляем себя в список прочитавших это сообщение
+        message.read.add(user)
 
         # создаем экземпляр вебсокет
-        websocket = SendingAlertsByWebsocket(user=user, room=room, message=message)
+        websocket = MessageView()
         # отправляем оповещение
-        websocket.new_message()
+        websocket.send_message_to_websocket(room, user, message)
 
-        return self.redirect_to_success_url(**kwargs)
+        return self.redirect_to_success_url()

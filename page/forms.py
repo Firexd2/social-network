@@ -1,8 +1,7 @@
 from django import forms
 
-from photo.models import Photo
 from page.models import WritingWall, SettingsUser
-
+from photo.models import Photo
 
 
 class NewAvatarForm(forms.ModelForm):

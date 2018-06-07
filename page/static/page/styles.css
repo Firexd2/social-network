@@ -81,7 +81,7 @@ input[name=status] {
     padding: 2px !important;
 }
 
-.status {
+.status, .status-only-read {
     font-size: 13px;
     color: #939393;
 }
@@ -89,4 +89,8 @@ input[name=status] {
 .status:hover {
     background: #ebebeb;
     cursor: pointer;
+}
+
+.content-wall {
+    padding-bottom: 10px;
 }

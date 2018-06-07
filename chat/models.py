@@ -1,10 +1,12 @@
+from datetime import datetime, timedelta
+
 from django.db import models
 from django.urls import reverse
-from photo.models import directory_path_photo
+from django.utils import dateformat
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
-from datetime import datetime, timedelta
-from django.utils import dateformat
+
+from photo.models import directory_path_photo
 
 
 class Message(models.Model):
@@ -26,9 +28,6 @@ class Message(models.Model):
 
         return self.datetime
 
-    # def get_time_flag(self):
-    #     return self.datetime .minute // 5
-
 
 class Room(models.Model):
     name = models.CharField('Название беседы', max_length=20, null=True)
@@ -44,12 +43,6 @@ class Room(models.Model):
 
     messages = models.ManyToManyField(Message)
 
-    # users = models.ManyToManyField('user.User')
-
-    # def get_other_user(self, user):
-    #     users = self.users.all()
-    #     return [x for x in users if x != user][0]
-
     def get_absolute_url(self):
         return reverse('room', kwargs={'pk': self.id})
 
@@ -60,10 +53,3 @@ class Room(models.Model):
                 return Room.objects.get(id=id_room)
             except Room.DoesNotExist:
                 pass
-
-
-# class Dialog(models.Model):
-#     users = models.ManyToManyField('user.User')
-#     messages = models.ManyToManyField(Message)
-
-

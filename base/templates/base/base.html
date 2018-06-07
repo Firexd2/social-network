@@ -3,7 +3,6 @@
 <html lang="ru">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'base/styles.css' %}">
@@ -50,28 +49,23 @@
 <div class="container">
     {% block container %}
         <div class="row">
-            <div class="col-lg-2 left-menu">
+            <div class="col-xs-2 left-menu">
                 {% include 'base/left-menu.html' %}
             </div>
-            <div class="col-lg-10 padding">
+            <div class="col-xs-10 padding">
                 {% block content %}{% endblock %}
             </div>
         </div>
     {% endblock %}
     <hr>
-    <nav id="footer" class="nav nav-inline">
-        <a class="nav-link active" href="#">О сайте</a>
-        <a class="nav-link" href="#">Исходный код</a>
-        <a class="nav-link" href="#">Используемые технологии</a>
+    <nav id="footer" style="padding-bottom: 15px" class="nav nav-inline">
+        <a class="nav-link" target="_blank" href="https://github.com/Firexd2/social-network"><i class="fab fa-github"></i> Код проекта</a>
     </nav>
 </div>
 <div class="new-m"><i class="far fa-envelope"></i> Пользователь <span id="name"></span> прислал вам новое сообщение</div>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="//code.jquery.com/jquery-3.1.0.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-{#<script src="//stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>#}
--<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js"></script>
 <script src="{% static 'base/scripts.js' %}"></script>
 {% block scripts %}
 {% endblock %}

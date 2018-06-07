@@ -33,7 +33,6 @@ class SettingsUser(models.Model):
 
     photo_albums = models.ManyToManyField(PhotoAlbum, blank=True, related_name='set_user')
 
-    # dialogs = models.ManyToManyField('chat.Dialog')
     rooms = models.ManyToManyField('chat.Room', related_name='settings_user')
 
 

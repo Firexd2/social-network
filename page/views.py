@@ -28,9 +28,8 @@ class PageView(UserMixin, MultiFormMixin, TemplateView):
     def get_instance_form_status(self):
         return self.request.user.settings
 
-    def valid_form_new_avatar(self, **kwargs):
+    def valid_form_new_avatar(self, form):
 
-        form = kwargs['form']
         photo = form.save()
 
         user = self.request.user
@@ -47,10 +46,9 @@ class PageView(UserMixin, MultiFormMixin, TemplateView):
         user_settings.avatar = photo.photo
         user_settings.save()
 
-        return self.redirect_to_success_url(**kwargs)
+        return self.redirect_to_success_url()
 
-    def valid_form_new_writting_wall(self, **kwargs):
-        form = kwargs['form']
+    def valid_form_new_writting_wall(self, form):
         user = self.request.user
         current_user = self.get_user
 
@@ -60,7 +58,7 @@ class PageView(UserMixin, MultiFormMixin, TemplateView):
 
         current_user.settings.wall.add(writting)
 
-        return self.redirect_to_success_url(**kwargs)
+        return self.redirect_to_success_url()
 
     def get_context_data(self, *args, **kwargs):
         context = super(PageView, self).get_context_data(**kwargs)
@@ -72,5 +70,3 @@ class PageView(UserMixin, MultiFormMixin, TemplateView):
     @property
     def get_last_photos(self):
         return Photo.objects.filter(album__set_user__user=self.get_user).order_by('-datetime')
-
-

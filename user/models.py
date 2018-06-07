@@ -2,11 +2,22 @@ from datetime import datetime
 
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 
 from page.models import SettingsUser
-from .manager import UserManager
+from user.manager import UserManager
+
+
+def validate_url_page_on_unique(value):
+
+    prohibited_names = ['settings', 'rooms', 'admin', 'auth',
+                        'general_search', 'room', 'new-room',
+                        'send_message']
+
+    if value in prohibited_names:
+        raise ValidationError(u'Адрес "%s" запрещён для использования' % value)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -20,7 +31,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_of_birth = models.DateField('Дата рождения', null=True, blank=True)
     city = models.CharField('Город', max_length=30, null=True, blank=True)
     employment = models.CharField('Тип деятельности', max_length=30, null=True, blank=True)
-    url_page = models.SlugField('Адрес страницы', max_length=100, unique=True, null=True, blank=True)
+
+    url_page = models.SlugField('Адрес страницы', max_length=100,
+                                validators=[validate_url_page_on_unique],
+                                unique=True,
+                                null=True,
+                                blank=True)
 
     date_joined = models.DateTimeField(auto_now_add=True)
     last_activity = models.DateTimeField(auto_now=True)
@@ -70,11 +86,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         result = 'Заходил' + sex_suffix
 
         if last.date() == now.date():
-            return result + ' сегодня в %s:%s' % (last.hour, last.minute)
+            return result + ' сегодня в %s' % last.strftime('%H:%M')
         elif (now.date() - last.date()).days == 1:
-            return result + ' вчера в %s:%s' % (last.hour, last.minute)
+            return result + ' вчера в %s' % last.strftime('%H:%M')
         else:
-            return result + ' %s в %s:%s' % (last.date(), last.hour, last.minute)
+            return result + ' %s в %s' % (last.date(), last.strftime('%H:%M'))
 
     @property
     def get_last_online(self):
@@ -94,7 +110,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             settings.save()
             self.settings = settings
 
-        super(User, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
         if not self.id_page:
             self.id_page = 'id' + str(self.id)

@@ -10,7 +10,7 @@ class FriendsListView(UserMixin, ActionMixin, TemplateView):
     template_name = field = title = ''
 
     def get_context_data(self, *args, **kwargs):
-        context = super(FriendsListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['list'] = eval('self.get_user.settings.' + self.field + '.all()')
         context['title'] = self.title
 

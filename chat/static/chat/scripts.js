@@ -1,18 +1,17 @@
 function scroll_to_bottom() {
-    const block = document.getElementById("chat");
+    const block = document.getElementById('chat');
     block.scrollTop = block.scrollHeight;
 }
 
-scroll_to_bottom();
+if (location.pathname.split('/')[1] === 'room') {
+    scroll_to_bottom();
+}
 
 $(document).ready(function () {
 
     $(function () {
         $('textarea[name=action-new-message]').keypress(function (e) {
             if (e.which === 13) {
-                //submit form via ajax, this is not JS but server side scripting so not showing here
-                // $("#chatbox").append($(this).val() + "<br/>");
-                // $(this).val("");
                 e.preventDefault();
                 $('form[name=message]').submit();
             }
@@ -48,12 +47,10 @@ $(document).ready(function () {
 
             const chat_log = $('.chat-log');
 
-
             const data = JSON.parse(json);
             const data_user_id = String(data.user_id);
 
             let new_message_object = '';
-
 
             const chat_item = $('.chat-item').last();
             const last_user_id = chat_item.attr('user');
@@ -61,7 +58,6 @@ $(document).ready(function () {
 
             const data_time = parseInt(data.time.split(':').slice(-1));
             const last_time = parseInt(last_datetime.split(':').slice(-1));
-
 
             if ((data_user_id === last_user_id) && (last_datetime.length === 5) && (data_time - last_time < 6) ) {
                 new_message_object = '<div user="' + data.user_id +'" time="' + data.time + '" class="chat-item no-read">\n' +
@@ -75,9 +71,7 @@ $(document).ready(function () {
                     '</table>\n' +
                     '</div>'
             } else {
-
                 const short_name = data.short_name;
-
                 new_message_object = '<div user="' + data.user_id +'" time="' + data.time + '" class="chat-item no-read">\n' +
                     '<table class="table table-sm table-item-chat">\n' +
                     '<tbody>\n' +
@@ -98,9 +92,8 @@ $(document).ready(function () {
                     '</div>'
             }
             chat_log.append(new_message_object);
-            $('textarea[name=action-new-message]').val('')
+            $('textarea[name=action-new-message]').val('');
             scroll_to_bottom()
-
         })
     });
 
@@ -216,7 +209,5 @@ $(document).ready(function () {
                 $('.chat-item').removeClass('no-read')
             }
         }
-
     }
-
 });

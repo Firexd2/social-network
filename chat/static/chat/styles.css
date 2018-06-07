@@ -2,10 +2,7 @@ textarea {overflow: hidden}
 
 .search-message .input-group-addon, .search-message input {
     background: none;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-    border-bottom: none;
+    border-style: none;
 }
 
 .search-message {
@@ -193,4 +190,8 @@ button[name=new-room] {
 
 table.all-users-room tr:hover {
     background: #ebebeb;
+}
+
+input[name=search-friend]:focus {
+    border: none;
 }

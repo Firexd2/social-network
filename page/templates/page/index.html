@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-lg-4 padding">
+        <div class="col-xs-4 padding">
             <div class="avatar block">
                 <div class="image">
                     {% if current_user.settings.avatar %}
@@ -24,7 +24,6 @@
                                 <input name="action-delete-friend" value="{{ current_user.id }}" type="text" hidden>
                                 <button style="opacity: 0.6" class="btn btn-outline-danger" type="submit">Убрать из друзей</button>
                             </form>
-
                         {% elif current_user in user.settings.subscriptions.all %}
                             sub
                         {% else %}
@@ -73,7 +72,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-8 padding">
+        <div class="col-xs-8 padding">
             <div class="details block">
                 <div>
                     <h5 style="float: left; margin-bottom: 3px">{{ current_user.get_full_name }}</h5>
@@ -92,7 +91,7 @@
                             {{ form_status }}
                         </form>
                     {% else %}
-                        <div class="status">
+                        <div class="status-only-read">
                             {% if current_user.settings.status %}
                                 {{ current_user.settings.status }}
                             {% endif %}
@@ -151,7 +150,6 @@
                 {% else %}
                     <p style="margin-bottom: 5px" class="short-info">Фотографии отсутствуют</p>
                 {% endif %}
-
             </div>
             <div class="wall block">
                 <form name="wall" method="POST">{% csrf_token %}

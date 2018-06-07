@@ -1,5 +1,5 @@
-
 from django.urls import path
+
 from friends import views as friends_views
 
 urlpatterns = [

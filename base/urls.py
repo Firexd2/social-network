@@ -19,11 +19,11 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 
 from base.views import general_search
-from page import views
-from photo import views as photo_views
-from sn import settings
-from user import views as user_views
 from chat import views as chat_views
+from user import views as user_views
+from photo import views as photo_views
+from page import views
+from sn import settings
 
 urlpatterns = [
     path('', views.RedirectToMyPageView.as_view()),
@@ -42,4 +42,3 @@ urlpatterns = [
     path('<str:id>/friends/', include('friends.urls')),
 
 ] + static(settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

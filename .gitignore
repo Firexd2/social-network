@@ -8,3 +8,4 @@ venv
 media
 migrations
 db.sqlite3
+dump.rdb

@@ -78,7 +78,6 @@ $(document).ready(function () {
             const alert = $('.new-m');
             const name_in_alert = $('.new-m #name');
 
-
             if (current_rooms_in_counter.indexOf(id) === -1) {
                 counter.show();
                 counter.text(prev_counter + 1);
@@ -86,7 +85,6 @@ $(document).ready(function () {
             }
             if (data.room_type === 'dialog' && path !== '/rooms/' && path.split('/')[1] !== 'room') {
                 name_in_alert.text(data.user);
-                console.log('123')
                 alert.show(300);
                 setTimeout(function () {
                     alert.hide(300)
@@ -120,7 +118,6 @@ $(document).ready(function () {
                         '</tr>')
                 }
             }
-
             if (path.split('/')[1] === 'room') {
                 const chat_log = $('.chat-log');
                 let new_message_object = '';
@@ -145,9 +142,7 @@ $(document).ready(function () {
                         '</table>\n' +
                         '</div>'
                 } else {
-
                     const short_name = data.user.split(' ')[0];
-
                     new_message_object = '<div user="' + data.user_id +'" time="' + data.time + '" class="chat-item other no-read">\n' +
                         '<table class="table table-sm table-item-chat">\n' +
                         '<tbody>\n' +
@@ -170,8 +165,6 @@ $(document).ready(function () {
                 chat_log.append(new_message_object);
                 scroll_to_bottom()
             }
-
         }
     }
-
 });
