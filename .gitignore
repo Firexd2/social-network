@@ -9,3 +9,4 @@ media
 migrations
 db.sqlite3
 dump.rdb
+local_settings.py

@@ -81,17 +81,6 @@ WSGI_APPLICATION = 'sn.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'sn',
-#         'USER': 'adm',
-#         'PASSWORD': 'snitscool',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -159,3 +148,8 @@ EMAIL_PORT = 587
 # image default
 
 NO_IMAGE = '/media/no-image.gif'
+
+try:
+    from .local_settings import *
+except:
+    pass
