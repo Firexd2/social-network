@@ -195,7 +195,7 @@ $(document).ready(function () {
         })
     });
 
-    const reading_messages = new WebSocket('ws://' + location.host.slice(0,-4) + '8888' + '/reading_messages/' + $('#id-user').text() + '/');
+    const reading_messages = new WebSocket('ws://' + location.host + '/websocket/reading_messages/' + $('#id-user').text() + '/');
 
     reading_messages.onmessage = function (ev) {
         const data = JSON.parse(ev.data);

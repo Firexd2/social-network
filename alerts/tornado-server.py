@@ -4,8 +4,8 @@ from alerts.handlers import NewMessageHandler, ReadingMessagesHandler
 
 app = tornado.web.Application(
     [
-        (r'/pages_alerts/(?P<id_user>\w+)/', NewMessageHandler),
-        (r'/reading_messages/(?P<id_user>\w+)/', ReadingMessagesHandler)
+        (r'websocket/pages_alerts/(?P<id_user>\w+)/', NewMessageHandler),
+        (r'websocket/reading_messages/(?P<id_user>\w+)/', ReadingMessagesHandler)
     ],
     debug=True
 )

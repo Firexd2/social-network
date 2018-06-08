@@ -14,7 +14,7 @@ def validate_url_page_on_unique(value):
 
     prohibited_names = ['settings', 'rooms', 'admin', 'auth',
                         'general_search', 'room', 'new-room',
-                        'send_message']
+                        'send_message', 'websocket']
 
     if value in prohibited_names:
         raise ValidationError(u'Адрес "%s" запрещён для использования' % value)

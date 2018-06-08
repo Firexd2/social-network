@@ -65,7 +65,7 @@ $(document).ready(function () {
 
     if ($('#id-user').text()) {
 
-        const alerts = new WebSocket('ws://' + location.host.slice(0,-4) + '8888' + '/pages_alerts/' + $('#id-user').text() + '/');
+        const alerts = new WebSocket('ws://' + location.host + '/websocket/pages_alerts/' + $('#id-user').text() + '/');
         const current_rooms_in_counter = $('#list-rooms').text().slice(1, -1).split(',');
 
         alerts.onmessage = function (ev) {
