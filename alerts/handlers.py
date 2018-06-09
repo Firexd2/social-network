@@ -2,7 +2,10 @@ import json
 
 import tornado.websocket
 
-from alerts.mixins import HandlerRedisMessages
+try:
+    from mixins import HandlerRedisMessages
+except ImportError:
+    from alerts.mixins import HandlerRedisMessages
 
 
 class NewMessageHandler(HandlerRedisMessages, tornado.websocket.WebSocketHandler):
