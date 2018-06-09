@@ -143,6 +143,7 @@ form label {
 
 .container{
     width: 1000px;
+    max-width: none !important;
 }
 
 .padding {
