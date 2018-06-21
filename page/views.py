@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import TemplateView, RedirectView
+from multi_form.mixin import MultiFormMixin
 
-from base.mixins import UserMixin, MultiFormMixin
+from base.mixins import UserMixin
 from page.forms import NewAvatarForm, NewWrittingWalForm, EditStatusForm
 from photo.models import Photo, PhotoAlbum
 

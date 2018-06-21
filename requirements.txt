@@ -4,3 +4,4 @@ django-imagekit==4.0.2
 tornado==4.5.3
 tornado-redis==2.4.18
 psycopg2==2.7.4
+django-multi-form

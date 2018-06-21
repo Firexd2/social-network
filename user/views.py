@@ -3,8 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import FormView, TemplateView
+from multi_form.mixin import MultiFormMixin
 
-from base.mixins import MultiFormMixin
 from user.forms import RegisterForm, CustomAuthenticationForm, EditSettingsForm
 from user.tools import send_verification_email, create_message
 

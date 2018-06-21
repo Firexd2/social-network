@@ -5,8 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import Http404
 from django.shortcuts import HttpResponse
 from django.views.generic import DetailView, ListView, TemplateView, View
+from multi_form.mixin import MultiFormMixin
 
-from base.mixins import ActionMixin, MultiFormMixin
+from base.mixins import ActionMixin
 from chat.forms import EditRoomLogoForm, EditRoomNameForm, NewRoomForm, OutRoomForm
 from chat.models import Message, Room
 from user.models import User

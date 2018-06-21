@@ -1,8 +1,9 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormMixin
+from multi_form.mixin import MultiFormMixin
 
-from base.mixins import MultiFormMixin, UserMixin
+from base.mixins import UserMixin
 from photo.forms import AlbumForm, NewPhotoForm, CoverAlbumForm, DeleteAlbumForm
 from photo.models import PhotoAlbum, Photo
 
